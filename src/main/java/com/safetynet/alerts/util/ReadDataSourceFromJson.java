@@ -1,6 +1,7 @@
 package com.safetynet.alerts.util;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,15 +19,10 @@ import com.safetynet.alerts.repository.PersonRepository;
 
 public class ReadDataSourceFromJson implements IReadDataSource {
 
-private static final Logger logger = LogManager.getLogger("ReadDataSourceFromJson");
-	
+	private static final Logger logger = LogManager.getLogger("ReadDataSourceFromJson");
+
 	@Autowired
 	private CustomProperties property;
-
-	/**
-	 * a json file path
-	 */
-	private String jsonFilePath ;
 
 	/**
 	 * ObjectMapper to mappe file data
@@ -37,61 +33,38 @@ private static final Logger logger = LogManager.getLogger("ReadDataSourceFromJso
 	 * JsonNode which stores all data
 	 */
 	private JsonNode dataNode = null;
-	
+
 	@Autowired
 	private PersonRepository personRepository;
 
-	/**
-	 * util.jsonFilePath in the application.properties
-	 */
-	public ReadDataSourceFromJson(String jsonFilePath) {
-		this.jsonFilePath = jsonFilePath;
-	}
-	
-	public ReadDataSourceFromJson() {}
 
-	public static Logger getLogger() {
-		return logger;
+	public ReadDataSourceFromJson() {
 	}
 
-	public CustomProperties getProperty() {
-		return property;
-	}
-
-	public String getJsonFilePath() {
-		return jsonFilePath;
-	}
-
-	public ObjectMapper getMapper() {
-		return mapper;
-	}
-
-	public JsonNode getDataNode() {
-		return dataNode;
-	}
-
-	public PersonRepository getPersonRepository() {
-		return personRepository;
-	}
 
 	@Override
 	public void readData() throws IOException {
-		dataNode = mapper.readTree(new File(property.getJsonFilePath()));
-		
-		JsonNode personsNode = dataNode.path("persons");
-		Person person = null;
-		for (JsonNode personNode : personsNode) {
-			try {
-				logger.debug("mapping json data to Person object ");
-				person = mapper.treeToValue(personNode, Person.class);
-				personRepository.addPerson(person);
-				System.out.println(person);
-			} catch ( IllegalArgumentException e) {
-				logger.error("error mapping json data to Person object ", e);
-			}
+		try {
+			logger.debug("loading json file ");
+			dataNode = mapper.readTree(new File(property.getJsonFilePath()));
 
+			logger.debug("start reading Person object ");
+			JsonNode personsNode = dataNode.path("persons");
+			Person person = null;
+			for (JsonNode personNode : personsNode) {
+				try {
+					logger.debug("start map json data with Person object ");
+					person = mapper.treeToValue(personNode, Person.class);
+					personRepository.addPerson(person);
+					System.out.println(person);
+				} catch (IllegalArgumentException e) {
+					logger.error("error while mapping json data to Person object ", e);
+				}
+			}
+			logger.debug("finish reading Person object ");
+		} catch (FileNotFoundException e) {
+			logger.error("error file json not found ", e);
 		}
 	}
-
 
 }
