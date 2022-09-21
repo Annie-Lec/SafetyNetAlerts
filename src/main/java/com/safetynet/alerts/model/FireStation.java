@@ -16,7 +16,7 @@ public class FireStation {
 	/**
 	 * fire station number
 	 */
-	private int station;
+	private String station;
 
 	/**
 	 * Empty Constructor
@@ -30,7 +30,7 @@ public class FireStation {
 	 * @param address
 	 * @param station
 	 */
-	public FireStation(String address, int station) {
+	public FireStation(String address, String station) {
 		super();
 		this.address = address;
 		this.station = station;
@@ -44,12 +44,19 @@ public class FireStation {
 		this.address = address;
 	}
 
-	public int getStation() {
+	public String getStation() {
 		return station;
 	}
 
-	public void setStation(int station) {
+	public void setStation(String station) {
 		this.station = station;
 	}
+
+	@Override
+	public String toString() {
+		return "FireStation [address=" + address + ", station=" + station + "]";
+	}
+	
+	
 
 }

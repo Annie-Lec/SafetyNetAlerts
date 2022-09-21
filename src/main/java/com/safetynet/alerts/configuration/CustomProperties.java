@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  *
  */
 @Configuration
-@ConfigurationProperties(prefix = "com.openclassrooms.apisafetynet.configuration")
+@ConfigurationProperties(prefix = "configuration")
 public class CustomProperties {
 
 	private String jsonFilePath;

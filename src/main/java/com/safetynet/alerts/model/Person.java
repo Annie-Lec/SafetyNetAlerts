@@ -30,7 +30,7 @@ public class Person {
 	 * @param phone
 	 * @param email
 	 */
-	public Person(String firstName, String lastName, String address, String city, int zip, String phone, String email) {
+	public Person(String firstName, String lastName, String address, String city, String zip, String phone, String email) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -63,7 +63,7 @@ public class Person {
 	/**
 	 * the person's zip code of the address
 	 */
-	private int zip;
+	private String zip;
 
 	/**
 	 * the person's phone
@@ -103,11 +103,11 @@ public class Person {
 		this.city = city;
 	}
 
-	public int getZip() {
+	public String getZip() {
 		return zip;
 	}
 
-	public void setZip(int zip) {
+	public void setZip(String zip) {
 		this.zip = zip;
 	}
 
