@@ -10,6 +10,14 @@ import org.springframework.stereotype.Component;
 import com.jsoniter.any.Any;
 import com.safetynet.alerts.model.Person;
 
+/**
+ * 
+ * class that contains the mapping of Person Records data : 
+ * JSON to Persons Class
+ * and Persons Class to JSON
+ * 
+ *
+ */
 @Component
 public class PersonMapper {
 	public static final Logger logger = LogManager.getLogger("PersonMapper Class");

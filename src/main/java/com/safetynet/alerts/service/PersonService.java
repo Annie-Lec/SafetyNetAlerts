@@ -11,11 +11,12 @@ import com.safetynet.alerts.repository.PersonRepository;
 
 @Service
 public class PersonService {
-
+	
 	@Autowired
-	PersonRepository personRepository ;
+	PersonRepository personRepository;
+	
 
-	public List<Person> findPersonsByAddress(String address)  {
+	public List<Person> findPersonsByAddress(String address) {
 		List<Person> persons = null;
 		try {
 			persons = personRepository.findPersonsByAddress(address);
@@ -23,11 +24,7 @@ public class PersonService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// if (persons != null) {
-		System.out.println(persons);
+		//System.out.println(persons);
 		return persons;
-
-		// }
 	}
-
 }

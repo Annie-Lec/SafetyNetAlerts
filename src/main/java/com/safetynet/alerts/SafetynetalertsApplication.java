@@ -5,36 +5,38 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.jsoniter.any.Any;
-import com.safetynet.alerts.mapper.PersonMapper;
-import com.safetynet.alerts.repository.PersonRepository;
+import com.safetynet.alerts.service.AlertsService;
+import com.safetynet.alerts.service.FireStationService;
 import com.safetynet.alerts.service.PersonService;
-import com.safetynet.alerts.util.IReadDataSource;
-import com.safetynet.alerts.util.ReadDataSourceFromJson;
 
 @SpringBootApplication
-public class SafetynetalertsApplication implements CommandLineRunner {
+public class SafetynetalertsApplication  {
 
 //	@Autowired
 //	IReadDataSource dataSource = new ReadDataSourceFromJson();
 //	
 //	PersonMapper personMapper = new PersonMapper();
-	@Autowired
-	PersonService personService = new PersonService();
+//	@Autowired
+//	PersonService personService = new PersonService();
 //	@Autowired
 //	PersonRepository personRepository = new PersonRepository();
-
+//	@Autowired
+//	FireStationService fireStationService = new FireStationService();
 	
+	@Autowired
+	AlertsService alertsService = new AlertsService();
 
 	public static void main(String[] args) {
 		SpringApplication.run(SafetynetalertsApplication.class, args);
 	}
 
-	@Override
-	public void run(String... args) throws Exception {
-		
-		//System.out.println(personRepository.findPersonsByAddress("951 LoneTree Rd"));
-		//System.out.println(personRepository.findAllThePersons());
-	personService.findPersonsByAddress("951 LoneTree Rd");
+//	@Override
+//	public void run(String... args) throws Exception {
+
+		// System.out.println(personRepository.findPersonsByAddress("951 LoneTree Rd"));
+		// System.out.println(personRepository.findAllThePersons());
+		//System.out.println(personService.findPersonsByAddress("951 LoneTree Rd"));
+//		System.out.println(fireStationService.findAddressByFireStation("3"));
+//		System.out.println(alertsService.getSMSforPersonsCoveredByStation("2"));
 	}
-}
+//}
