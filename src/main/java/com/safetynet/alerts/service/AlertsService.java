@@ -12,6 +12,10 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.safetynet.alerts.dto.InhabitantsCoveredDTO;
+import com.safetynet.alerts.dto.ListOfChildAlertDTO;
+import com.safetynet.alerts.dto.NameFirstnameAndAgeDTO;
+import com.safetynet.alerts.dto.PersonsCoveredDTO;
 import com.safetynet.alerts.model.MedicalRecords;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.util.AgeCalculator;
@@ -36,30 +40,27 @@ public class AlertsService {
 	 * Endpoint from phoneAlert?firestation=<firestation_number>
 	 * 
 	 * @param numberFireStation
-	 * @return the JSONlist of phone number to allow emergency services to send SMS
+	 * @return the List<String> of phone number to allow emergency services to send
+	 *         SMS
 	 */
-	public JSONObject getPhoneforPersonsCoveredByStation(int numberFireStation) {
+	public List<String> getPhoneforPersonsCoveredByStation(int numberFireStation) {
 		logger.info("create List of phone number for URL3 - getSMSforPersonsCoveredByStation() ");
 		List<Person> personsAtAnAddress = new ArrayList<>();
-		List<Person> personsAtSeveralAddresses = new ArrayList<>();
-		HashMap<String, Object> bodyHashMap = new HashMap<String, Object>();
+
+		List<String> phone = new ArrayList<>();
 
 		List<String> addresses;
 		try {
 			addresses = fireStationService.findAddressByFireStation(numberFireStation);
 
 			for (String address : addresses) {
-				personsAtAnAddress = personService.findPersonsByAddress(address);
+				personsAtAnAddress.addAll(personService.findPersonsByAddress(address));
 
-				for (Person p : personsAtAnAddress) {
-					personsAtSeveralAddresses.add(p);
-				}
 			}
 
-			bodyHashMap.put("phone",
-					personsAtSeveralAddresses.stream().map(Person::getPhone).distinct().collect(Collectors.toList()));
-			bodyJSON = new JSONObject(bodyHashMap);
-			return bodyJSON;
+			phone = personsAtAnAddress.stream().map(Person::getPhone).distinct().collect(Collectors.toList());
+
+			return phone;
 		} catch (IOException e) {
 			logger.error("problem with firestation number");
 			e.printStackTrace();
@@ -75,18 +76,20 @@ public class AlertsService {
 	 * Endpoint from firestation?stationNumber=<station_number>
 	 * 
 	 * @param numberFireStation
-	 * @return the JSONlist of person covered by a station number
+	 * @return the public InhabitantsCoveredDTO list of person covered by a station
+	 *         number
 	 */
 
-	public JSONObject getListOfPersonsCoveredByStation(int numberFireStation) {
-		logger.info("create List of phone number for URL3 - getSMSforPersonsCoveredByStation() ");
+	public InhabitantsCoveredDTO getListOfPersonsCoveredByStation(int numberFireStation) {
+		logger.info("create List of people  for URL1 - getListOfPersonsCoveredByStation() ");
+		List<PersonsCoveredDTO> personsCoveredDTO = new ArrayList<>();
 		List<Person> personsAtAnAddress = new ArrayList<>();
-		List<String> personsCovered = new ArrayList<>();
-		HashMap<String, Object> bodyHashMap = new HashMap<String, Object>();
+
+	
 		int nbAdults = 0;
 		int nbChildren = 0;
-
 		List<String> addresses;
+
 		try {
 			addresses = fireStationService.findAddressByFireStation(numberFireStation);
 
@@ -94,9 +97,8 @@ public class AlertsService {
 				personsAtAnAddress = personService.findPersonsByAddress(address);
 
 				for (Person p : personsAtAnAddress) {
-					personsCovered.add("firstName : " + p.getFirstName() + ", " + "lastName : " + p.getLastName() + ", "
-							+ "address : " + p.getAddress() + ", " + "phone : " + p.getPhone());
-					bodyHashMap.put("personscoveredbystation", personsCovered);
+					personsCoveredDTO.add(
+							new PersonsCoveredDTO(p.getFirstName(), p.getLastName(), p.getAddress(), p.getPhone()));
 					MedicalRecords medicalRecords = medicalRecordsService.findMRByNameAndFirstName(p.getLastName(),
 							p.getFirstName());
 					if (AgeCalculator.calculate(medicalRecords.getBirthdate()) > 18) {
@@ -106,12 +108,8 @@ public class AlertsService {
 					}
 				}
 			}
-			bodyHashMap.put("nbAdults", nbAdults);
-			bodyHashMap.put("nbChildren", nbChildren);
 
-			bodyJSON = new JSONObject(bodyHashMap);
-
-			return bodyJSON;
+			return new InhabitantsCoveredDTO(personsCoveredDTO, nbAdults, nbChildren);
 		} catch (IOException e) {
 			logger.error("problem with firestation number");
 			e.printStackTrace();
@@ -122,16 +120,15 @@ public class AlertsService {
 	/**
 	 * Define the list of children at an address
 	 * 
-	 * Endpoint from childAlert?adsress=<address>
+	 * Endpoint from childAlert?address=<address>
 	 * 
 	 * @param address
 	 * @return the JSONlist of person covered by a station number
 	 */
 
-	public JSONObject getListOfChildrenAtAnAdress(String address) {
+	public ListOfChildAlertDTO getListOfChildrenAtAnAdress(String address) {
 		List<Person> personsAtAnAddress = new ArrayList<>();
-		HashMap<String, Object> bodyHashMap = new HashMap<String, Object>();
-		List<String> childrenCovered = new ArrayList<>();
+		List<NameFirstnameAndAgeDTO> childrenCovered = new ArrayList<>();
 		List<String> adults = new ArrayList<>();
 		int age;
 		int childAtTheAddress = 0;
@@ -145,26 +142,26 @@ public class AlertsService {
 
 				age = AgeCalculator.calculate(medicalRecords.getBirthdate());
 				if (age <= 18) {
-					childrenCovered.add("firstName : " + p.getFirstName() + ", " + "lastName : " + p.getLastName()
-							+ " - " + "age : " + age);
+					childrenCovered.add(new NameFirstnameAndAgeDTO(p.getLastName(), p.getFirstName(), age));
 					childAtTheAddress++;
 				} else {
-					adults.add("firstName : " + p.getFirstName() + ", " + "lastName : " + p.getLastName());
+					adults.add(p.getLastName() + " " + p.getFirstName());
 				}
 
-				if (childAtTheAddress > 0) {
-					bodyHashMap.put("childrenAtTheAddress", childrenCovered);
-					bodyHashMap.put("otherInhabitants", adults);
-				}
+				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				logger.error("problem with the address");
+				System.out.println("pb address");
 				e.printStackTrace();
+				return null;
 			}
 		}
-
-		bodyJSON = new JSONObject(bodyHashMap);
-
-		return bodyJSON;
+		
+		if (childAtTheAddress > 0) {
+			return new ListOfChildAlertDTO(childrenCovered, adults);
+		} else {
+			return null;
+		}
 
 	}
 }
