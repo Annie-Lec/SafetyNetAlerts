@@ -9,32 +9,105 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.safetynet.alerts.dto.InfoForFirstAndLastNameDTO;
 import com.safetynet.alerts.dto.InhabitantsCoveredDTO;
 import com.safetynet.alerts.service.AlertsService;
 
 @Controller
 public class AlertsController {
-	
+
 	@Autowired
 	AlertsService alertsService;
-	
 
-	
+	/**
+	 * http://localhost:8080/phoneAlert?firestation=<firestation_number>
+	 * 
+	 * @param firestation
+	 * @return
+	 */
 	@GetMapping("/phoneAlert")
-	public ResponseEntity<List<String>> SMS(@RequestParam(value = "firestation", required = true) int firestation){
-		return new ResponseEntity <> (alertsService.getPhoneforPersonsCoveredByStation(firestation), HttpStatus.OK);
-		
+	public ResponseEntity<List<String>> SMS(@RequestParam(value = "firestation", required = true) int firestation) {
+		return new ResponseEntity<>(alertsService.getPhoneforPersonsCoveredByStation(firestation), HttpStatus.OK);
+
 	}
-	
+
+	/**
+	 * http://localhost:8080/firestation?stationNumber=<station_number>
+	 * 
+	 * @param firestation
+	 * @return
+	 */
 	@GetMapping("/firestation")
-	public ResponseEntity<InhabitantsCoveredDTO> listOfPersonsConcerned(@RequestParam(value = "firestation", required = true) int firestation){
-		return new ResponseEntity <> (alertsService.getListOfPersonsCoveredByStation(firestation), HttpStatus.OK);
-		
+	public ResponseEntity<InhabitantsCoveredDTO> listOfPersonsConcerned(
+			@RequestParam(value = "firestation", required = true) int firestation) {
+		return new ResponseEntity<>(alertsService.getListOfPersonsCoveredByStation(firestation), HttpStatus.OK);
+
 	}
-	
+
+	/**
+	 * http://localhost:8080/childAlert?address=<address>
+	 * 
+	 * @param address
+	 * @return
+	 */
 	@GetMapping("/childAlert")
-	public ResponseEntity<Object> listOfChildrenConcerned(@RequestParam(value = "address", required = true) String address){
-		return new ResponseEntity <> (alertsService.getListOfChildrenAtAnAdress(address), HttpStatus.OK);
-		
+	public ResponseEntity<List<Object>> listOfChildrenConcerned(
+			@RequestParam(value = "address", required = true) String address) {
+		return new ResponseEntity<>(alertsService.getListOfChildrenAtAnAdress(address), HttpStatus.OK);
+
 	}
+
+	/**
+	 * http://localhost:8080/fire?address=<address>
+	 * 
+	 * @param address
+	 * @return
+	 */
+	@GetMapping("/fire")
+	public ResponseEntity<List<Object>> listOfInhabitantAtAnAddress(
+			@RequestParam(value = "address", required = true) String address) {
+		return new ResponseEntity<>(alertsService.getListOfInhabitantsAtAnAddress(address), HttpStatus.OK);
+
+	}
+
+	/**
+	 * http://localhost:8080/flood/stations?stations=<a list of station_numbers>
+	 * 
+	 * @param stations
+	 * @return
+	 */
+	@GetMapping("/flood/stations")
+	public ResponseEntity<List<Object>> listOfInhabitantConcernedByAStation(@RequestParam List<Integer> stations) {
+		return new ResponseEntity<>(alertsService.getListOfInhabitantsForAStation(stations), HttpStatus.OK);
+
+	}
+
+	/**
+	 * http://localhost:8080/personInfo?firstName=<firstName>&lastName=<lastName>
+	 * 
+	 * @param lastName
+	 * @param firstName
+	 * @return
+	 */
+	@GetMapping("/personInfo")
+	public ResponseEntity<List<InfoForFirstAndLastNameDTO>> informationsForAGivenPersonAndHisFamily(
+			@RequestParam String lastName, String firstName) {
+		return new ResponseEntity<>(alertsService.getInformationsForAGivenPersonAndHisFamily(firstName, lastName),
+				HttpStatus.OK);
+
+	}
+
+	/**
+	 * http://localhost:8080/communityEmail?city=<city>
+	 * 
+	 * @param city
+	 * @return
+	 */
+	@GetMapping("/communityEmail")
+	public ResponseEntity<List<String>> listOfEmailsInTheCity(
+			@RequestParam(value = "city", required = true) String city) {
+		return new ResponseEntity<>(alertsService.getEmailforPersonsInTheCity(city), HttpStatus.OK);
+
+	}
+
 }

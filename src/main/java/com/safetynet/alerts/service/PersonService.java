@@ -11,20 +11,52 @@ import com.safetynet.alerts.repository.PersonRepository;
 
 @Service
 public class PersonService {
-	
+
 	@Autowired
 	PersonRepository personRepository;
-	
 
 	public List<Person> findPersonsByAddress(String address) {
 		List<Person> persons = null;
 		try {
 			persons = personRepository.findPersonsByAddress(address);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//System.out.println(persons);
+
 		return persons;
 	}
+
+	public List<Person> findPersonsByLastName(String lastName) {
+
+		List<Person> persons = null;
+		try {
+			persons = personRepository.findPersonsByName(lastName);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return persons;
+	}
+	
+	public Person findPersonByLastNameAndFirstName(String lastName, String firstName) {
+
+		Person person = null;
+		try {
+			person = personRepository.findPersonByNameAndFirstName(firstName, lastName);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return person;
+	}
+	
+	public List<Person> findPersonsByCity(String city) {
+
+		List<Person> persons = null;
+		try {
+			persons = personRepository.findPersonsByCity(city);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return persons;
+	}
+
 }

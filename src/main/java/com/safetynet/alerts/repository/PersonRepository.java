@@ -73,9 +73,10 @@ public class PersonRepository {
 		logger.debug("deleting person {} from the list of persons ", person);
 		this.persons.remove(person);
 	}
-	
+
 	/**
-	 * update a person find by name and first name then deleted and added in the List of Persons
+	 * update a person find by name and first name then deleted and added in the
+	 * List of Persons
 	 * 
 	 * @param person
 	 */
@@ -83,7 +84,8 @@ public class PersonRepository {
 	public Person updatePerson(Person person) throws IOException {
 		logger.debug("update a person");
 		Person persontoUpdate = findPersonByNameAndFirstName(person.getLastName(), person.getFirstName());
-		// l'update se fait par suppression de l'ancienne Personne puis ajout de la nouvelle
+		// l'update se fait par suppression de l'ancienne Personne puis ajout de la
+		// nouvelle
 		deletePerson(persontoUpdate);
 		addPerson(person);
 		return person;
@@ -105,7 +107,7 @@ public class PersonRepository {
 	 */
 	public List<Person> findPersonsByAddress(String address) throws IOException {
 		logger.debug("find a list of persons at an address");
-		//System.out.println("find a list of persons at an address");
+		// System.out.println("find a list of persons at an address");
 		return persons.stream().filter(p -> p.getAddress().equalsIgnoreCase(address)).collect(Collectors.toList());
 	}
 
@@ -141,14 +143,10 @@ public class PersonRepository {
 		logger.debug("find THE person with the given first name and Last name: ");
 		System.out.println("find a list of persons with the same name");
 		return persons.stream().filter(p -> p.getLastName().equalsIgnoreCase(name))
-				.filter(p -> p.getFirstName().equalsIgnoreCase(firstName)).findFirst().get();
+				.filter(p -> p.getFirstName().equalsIgnoreCase(firstName)).findFirst().orElse(null);
 	}
+
 	
-
-	public List<Person> getPersons() {
-		return persons;
-	}
-
 	public void setPersons(List<Person> persons) {
 		this.persons = persons;
 	}

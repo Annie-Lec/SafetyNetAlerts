@@ -3,6 +3,7 @@ package com.safetynet.alerts.repository;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -71,7 +72,7 @@ public class MedicalRecordsRepository {
 	}
 	
 	/**
-	 * Retrieve the medical records for the given last name and the given first name
+	 * Retrieve the medical records for the person with the given last name and the given first name
 	 * 
 	 * @param name
 	 * @param firstName
@@ -81,6 +82,20 @@ public class MedicalRecordsRepository {
 		return medicalRecords.stream().filter(p -> p.getLastName().equalsIgnoreCase(name))
 				.filter(p -> p.getFirstName().equalsIgnoreCase(firstName)).findFirst().get();
 	}
+	
+	
+	/**
+	 * Retrieve the medical records for all the people with the same family name 
+	 * 
+	 * @param name
+	 * 
+	 */
+	public List<MedicalRecords> findMRByFamilyName(String name) throws IOException {
+		logger.debug("find THE Medical Records for all the people with the same family name: ");
+		return medicalRecords.stream().filter(p -> p.getLastName().equalsIgnoreCase(name))
+				.collect(Collectors.toList());
+	}
+
 
 
 }

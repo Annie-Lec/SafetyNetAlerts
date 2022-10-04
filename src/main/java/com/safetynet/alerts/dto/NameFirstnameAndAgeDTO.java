@@ -3,8 +3,8 @@ package com.safetynet.alerts.dto;
 
 /**
  * used by ListOfChildAlertDTO ; endpoint childAlert?address=<address>
- * @author aNewL
- * @See ListOfChildAlertDTO
+ * 
+ * 
  */
 public class NameFirstnameAndAgeDTO {
 	
@@ -17,21 +17,21 @@ public class NameFirstnameAndAgeDTO {
 	 */
 	private String lastName;
 	/**
-	 * age for the minor only
+	 * age 
 	 */
-	private int ageForMinor;
+	private int age;
 	
 	/**
 	 * Constructor with fields
 	 * @param firstName
 	 * @param lastName
-	 * @param ageForMinor
+	 * @param age
 	 */
-	public NameFirstnameAndAgeDTO(String firstName, String lastName, int ageForMinor) {
+	public NameFirstnameAndAgeDTO(String firstName, String lastName, int age) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.ageForMinor = ageForMinor;
+		this.age = age;
 	}
 	
 		
@@ -39,6 +39,8 @@ public class NameFirstnameAndAgeDTO {
 	 * Constructor without fields
 	 */
 	public NameFirstnameAndAgeDTO() {}
+	
+	
 	public String getFirstName() {
 		return firstName;
 	}
@@ -51,11 +53,11 @@ public class NameFirstnameAndAgeDTO {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	public int getAgeForMinor() {
-		return ageForMinor;
+	public int getAge() {
+		return age;
 	}
-	public void setAgeForMinor(int ageForMinor) {
-		this.ageForMinor = ageForMinor;
+	public void setAge(int age) {
+		this.age = age;
 	}
 
 	

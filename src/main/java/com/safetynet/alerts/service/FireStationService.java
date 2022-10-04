@@ -50,5 +50,12 @@ public class FireStationService {
 		return fireStations.stream().map(FireStation::getAddress).distinct().collect(Collectors.toList());
 
 	}
+	
+	
+	public int findTheNumberOfFirestationByAddress(String address) throws IOException {
+		logger.debug("find the number of a firestation for a given address");
+		FireStation fs = fireStationRepository.findFireStationsByAddress(address);
+		return fs.getStation();
+	}
 
 }
