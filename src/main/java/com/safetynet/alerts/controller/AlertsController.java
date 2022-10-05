@@ -9,8 +9,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.safetynet.alerts.dto.InfoAddressDTO;
 import com.safetynet.alerts.dto.InfoForFirstAndLastNameDTO;
+import com.safetynet.alerts.dto.InfoStationDTO;
 import com.safetynet.alerts.dto.InhabitantsCoveredDTO;
+import com.safetynet.alerts.dto.ListOfChildAlertDTO;
 import com.safetynet.alerts.service.AlertsService;
 
 @Controller
@@ -51,7 +54,7 @@ public class AlertsController {
 	 * @return
 	 */
 	@GetMapping("/childAlert")
-	public ResponseEntity<List<Object>> listOfChildrenConcerned(
+	public ResponseEntity<List<ListOfChildAlertDTO>> listOfChildrenConcerned(
 			@RequestParam(value = "address", required = true) String address) {
 		return new ResponseEntity<>(alertsService.getListOfChildrenAtAnAdress(address), HttpStatus.OK);
 
@@ -64,7 +67,7 @@ public class AlertsController {
 	 * @return
 	 */
 	@GetMapping("/fire")
-	public ResponseEntity<List<Object>> listOfInhabitantAtAnAddress(
+	public ResponseEntity<List<InfoAddressDTO>> listOfInhabitantAtAnAddress(
 			@RequestParam(value = "address", required = true) String address) {
 		return new ResponseEntity<>(alertsService.getListOfInhabitantsAtAnAddress(address), HttpStatus.OK);
 
@@ -77,7 +80,7 @@ public class AlertsController {
 	 * @return
 	 */
 	@GetMapping("/flood/stations")
-	public ResponseEntity<List<Object>> listOfInhabitantConcernedByAStation(@RequestParam List<Integer> stations) {
+	public ResponseEntity<List<InfoStationDTO>> listOfInhabitantConcernedByAStation(@RequestParam List<Integer> stations) {
 		return new ResponseEntity<>(alertsService.getListOfInhabitantsForAStation(stations), HttpStatus.OK);
 
 	}

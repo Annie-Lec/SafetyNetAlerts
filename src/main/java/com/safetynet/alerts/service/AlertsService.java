@@ -12,10 +12,13 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.safetynet.alerts.dto.InfoAddressDTO;
 import com.safetynet.alerts.dto.InfoForFirstAndLastNameDTO;
+import com.safetynet.alerts.dto.InfoStationDTO;
 import com.safetynet.alerts.dto.InhabitantsAtAnaddressDTO;
 import com.safetynet.alerts.dto.InhabitantsCoveredDTO;
-
+import com.safetynet.alerts.dto.ListOfChildAlertDTO;
+import com.safetynet.alerts.dto.NameAndFirstNameDTO;
 import com.safetynet.alerts.dto.NameFirstnameAndAgeDTO;
 import com.safetynet.alerts.dto.PersonsCoveredDTO;
 import com.safetynet.alerts.model.MedicalRecords;
@@ -133,16 +136,16 @@ public class AlertsService {
 	 * @return the List of children / others at an address
 	 */
 
-	public List<Object> getListOfChildrenAtAnAdress(String address) {
+	public List<ListOfChildAlertDTO> getListOfChildrenAtAnAdress(String address) {
 		logger.info("create List of info by children at an address : getListOfChildrenAtAnAdress ");
 
 		List<Person> personsAtAnAddress = new ArrayList<>();
 		List<NameFirstnameAndAgeDTO> childrenCovered = new ArrayList<>();
-		List<String> adults = new ArrayList<>();
+		List<NameAndFirstNameDTO> adults = new ArrayList<>();
 		int age;
 		int childAtTheAddress = 0;
 
-		List<Object> listChildAlert = new ArrayList<>();
+		List<ListOfChildAlertDTO> listChildAlert = new ArrayList<>();
 
 		personsAtAnAddress = personService.findPersonsByAddress(address);
 
@@ -157,7 +160,7 @@ public class AlertsService {
 					childrenCovered.add(new NameFirstnameAndAgeDTO(p.getLastName(), p.getFirstName(), age));
 					childAtTheAddress++;
 				} else {
-					adults.add(p.getLastName() + " " + p.getFirstName());
+					adults.add(new NameAndFirstNameDTO(p.getFirstName(), p.getLastName()));
 				}
 
 			} catch (IOException e) {
@@ -169,8 +172,7 @@ public class AlertsService {
 		}
 
 		if (childAtTheAddress > 0) {
-			listChildAlert.add(childrenCovered);
-			listChildAlert.add(adults);
+			listChildAlert.add(new ListOfChildAlertDTO(childrenCovered, adults));
 
 			return listChildAlert;
 		} else {
@@ -189,12 +191,12 @@ public class AlertsService {
 	 * @param address
 	 * @return the list of inhabitants at an address
 	 */
-	public List<Object> getListOfInhabitantsAtAnAddress(String address) {
+	public List<InfoAddressDTO> getListOfInhabitantsAtAnAddress(String address) {
 		logger.info("create List of info by inhabitants at an address : getListOfInhabitantsAtAnAddress ");
 
 		List<Person> personsAtAnAddress = new ArrayList<>();
 		List<InhabitantsAtAnaddressDTO> inhabitantsAtAnaddressDTO = new ArrayList<>();
-		List<Object> listOfInhabitants = new ArrayList<>();
+		List<InfoAddressDTO> listOfInhabitants = new ArrayList<>();
 		int fireStation;
 		int age;
 
@@ -212,9 +214,9 @@ public class AlertsService {
 
 			}
 
-			listOfInhabitants.add(inhabitantsAtAnaddressDTO);
-			listOfInhabitants.add("address : " + address);
-			listOfInhabitants.add("fireStation : " + fireStation);
+			listOfInhabitants.add(new InfoAddressDTO(inhabitantsAtAnaddressDTO, "address : " + address,
+					"fireStation : " + fireStation));
+
 			return listOfInhabitants;
 
 		} catch (IOException e) {
@@ -235,29 +237,30 @@ public class AlertsService {
 	 * @param fireStations
 	 * @return
 	 */
-	public List<Object> getListOfInhabitantsForAStation(List<Integer> fireStations) {
+	public List<InfoStationDTO> getListOfInhabitantsForAStation(List<Integer> fireStations) {
 		logger.info("create List of info by inhabitants for a list of stations : getListOfInhabitantsForAStation ");
 
 		List<Person> personsAtAnAddress = new ArrayList<>();
-		List<InhabitantsAtAnaddressDTO> inhabitantsAtAnaddressDTO = new ArrayList<>();
+		
 		List<String> addresses = new ArrayList<>();
-		List<Object> listOfInhabitants = new ArrayList<>();
+		List<InfoStationDTO> listOfInhabitants = new ArrayList<>();
 
 		int age;
 
 		try {
 			int[] fireStation = fireStations.stream().mapToInt(Integer::intValue).toArray();
 			for (int fs : fireStation) {
-				listOfInhabitants.add("fire station : " + fs);
+				// listOfInhabitants.add("fire station : " + fs);
+				MedicalRecords medicalRecords;
 
 				addresses = fireStationService.findAddressByFireStation(fs);
 
 				for (String address : addresses) {
-					listOfInhabitants.add("address : " + address);
+					List<InhabitantsAtAnaddressDTO> inhabitantsAtAnaddressDTO = new ArrayList<>();
 					personsAtAnAddress = personService.findPersonsByAddress(address);
 
 					for (Person p : personsAtAnAddress) {
-						MedicalRecords medicalRecords;
+					
 						medicalRecords = medicalRecordsService.findMRByNameAndFirstName(p.getLastName(),
 								p.getFirstName());
 						age = AgeCalculator.calculate(medicalRecords.getBirthdate());
@@ -266,8 +269,7 @@ public class AlertsService {
 								p.getPhone(), age, medicalRecords.getMedications(), medicalRecords.getAllergies()));
 
 					}
-
-					listOfInhabitants.add(inhabitantsAtAnaddressDTO);
+					listOfInhabitants.add(new InfoStationDTO(fs, address, inhabitantsAtAnaddressDTO));
 				}
 			}
 			return listOfInhabitants;
