@@ -1,6 +1,5 @@
 package com.safetynet.alerts.repository;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,38 +19,32 @@ import com.safetynet.alerts.util.ReadDataSourceFromJson;
 
 /**
  * 
- * class that contains the management of fire station data 
+ * class that contains the management of fire station data
  *
  */
 @Repository
 public class FireStationRepository {
-	
+
 	private static final Logger logger = LogManager.getLogger("FireStation Repository");
 
 	private List<FireStation> fireStations = new ArrayList<>();
-	
+
 	@Autowired
 	IReadDataSource dataSource = new ReadDataSourceFromJson();
 	@Autowired
 	FireStationMapper fireStationMapper = new FireStationMapper();
 
-	public FireStationRepository() {
-		// TODO Auto-generated constructor stub
-	}
 	
 	/**
-	 * Before running the Fire Station Repository Constructor this method is running to
-	 * initiate data source and to extract List of FireStations
+	 * Before running the Fire Station Repository Constructor this method is running
+	 * to initiate data source and to extract List of FireStations
 	 * 
 	 */
 	@PostConstruct
 	public void initFireStations() {
 		System.out.println("initFire initFire initFire");
-		setFireStations
-		(fireStationMapper.mapToFireStationClass((Any) dataSource.getReadDataFireStations()));
+		setFireStations(fireStationMapper.mapToFireStationClass((Any) dataSource.getReadDataFireStations()));
 	}
-
-	
 
 	/**
 	 * Constructor with parameters
@@ -59,7 +52,7 @@ public class FireStationRepository {
 	 * @param fireStations
 	 */
 	public FireStationRepository(List<FireStation> fireStations) {
-			this.fireStations = fireStations;
+		this.fireStations = fireStations;
 	}
 
 	/**
@@ -69,9 +62,9 @@ public class FireStationRepository {
 	 */
 	public void addFireStation(FireStation fireStation) {
 		logger.info("saving a fireStation in the data listof fireStation", fireStation);
-		this.fireStations.add(fireStation);
+		fireStations.add(fireStation);
 	}
-	
+
 	/**
 	 * Delete a fireStation in the list of fireStations
 	 * 
@@ -79,47 +72,42 @@ public class FireStationRepository {
 	 */
 	public void deleteFireStation(FireStation fireStation) {
 		logger.info("deleting a fireStation in the data listof fireStation", fireStation);
-		this.fireStations.remove(fireStation);
+		fireStations.remove(fireStation);
 	}
-	
+
 	/**
 	 * Update a fireStation in the list of fireStations
 	 * 
 	 * @param fireStation
-	 * @throws IOException 
+	 * 
 	 */
-	public FireStation updateFireStation(FireStation fireStation) throws IOException {
+	public FireStation updateFireStation(FireStation fireStation) {
 		FireStation fireStationToUpdate = findFireStationsByAddress(fireStation.getAddress());
 		logger.info("update  a fireStation in the data listof fireStation", fireStation);
 		deleteFireStation(fireStationToUpdate);
 		addFireStation(fireStation);
 		return fireStation;
 	}
-	
-	
-	
+
 	/**
 	 * Retrieve the list of FireStations at the address
 	 * 
 	 * @param address
 	 */
-	public FireStation findFireStationsByAddress(String address) throws IOException {
+	public FireStation findFireStationsByAddress(String address) {
 		logger.debug("find a list of fireStations at an address : findFireStationsByAddress");
-		//System.out.println("find a list of fireStations at an address");
-		return fireStations.stream().filter(p -> p.getAddress().equalsIgnoreCase(address)).findFirst().get();
+		return fireStations.stream().filter(p -> p.getAddress().equalsIgnoreCase(address)).findFirst().orElse(null);
 	}
 
 	/**
 	 * Retrieve the list of FireStations for a station number
 	 * 
-	 * @param number in String of the station
+	 * @param number of the station
 	 */
-	public List<FireStation> findFireStationByNumber(int fireStation) throws IOException {
+	public List<FireStation> findFireStationByNumber(int fireStation) {
 		logger.debug("find a list of addresses for a firestation : findFireStationByNumber");
-	//return fireStations.stream().filter(p -> p.getStation().equalsIgnoreCase(fireStation)).collect(Collectors.toList());
-		return fireStations.stream().filter(p -> p.getStation() == fireStation ).collect(Collectors.toList());
+		return fireStations.stream().filter(p -> p.getStation() == fireStation).collect(Collectors.toList());
 	}
-
 
 	public List<FireStation> getFireStations() {
 		return fireStations;
@@ -128,8 +116,5 @@ public class FireStationRepository {
 	public void setFireStations(List<FireStation> fireStations) {
 		this.fireStations = fireStations;
 	}
-	
-	
-
 
 }

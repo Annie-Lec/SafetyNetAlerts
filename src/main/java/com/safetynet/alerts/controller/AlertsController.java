@@ -14,6 +14,7 @@ import com.safetynet.alerts.dto.InfoForFirstAndLastNameDTO;
 import com.safetynet.alerts.dto.InfoStationDTO;
 import com.safetynet.alerts.dto.InhabitantsCoveredDTO;
 import com.safetynet.alerts.dto.ListOfChildAlertDTO;
+import com.safetynet.alerts.exceptions.DataNotFoundException;
 import com.safetynet.alerts.service.AlertsService;
 
 @Controller
@@ -27,9 +28,10 @@ public class AlertsController {
 	 * 
 	 * @param firestation
 	 * @return
+	 * @throws DataNotFoundException 
 	 */
 	@GetMapping("/phoneAlert")
-	public ResponseEntity<List<String>> SMS(@RequestParam(value = "firestation", required = true) int firestation) {
+	public ResponseEntity<List<String>> SMS(@RequestParam(value = "firestation", required = true) int firestation) throws DataNotFoundException {
 		return new ResponseEntity<>(alertsService.getPhoneforPersonsCoveredByStation(firestation), HttpStatus.OK);
 
 	}
@@ -39,10 +41,11 @@ public class AlertsController {
 	 * 
 	 * @param firestation
 	 * @return
+	 * @throws DataNotFoundException 
 	 */
 	@GetMapping("/firestation")
 	public ResponseEntity<InhabitantsCoveredDTO> listOfPersonsConcerned(
-			@RequestParam(value = "firestation", required = true) int firestation) {
+			@RequestParam(value = "firestation", required = true) int firestation) throws DataNotFoundException {
 		return new ResponseEntity<>(alertsService.getListOfPersonsCoveredByStation(firestation), HttpStatus.OK);
 
 	}
@@ -65,10 +68,11 @@ public class AlertsController {
 	 * 
 	 * @param address
 	 * @return
+	 * @throws DataNotFoundException 
 	 */
 	@GetMapping("/fire")
 	public ResponseEntity<List<InfoAddressDTO>> listOfInhabitantAtAnAddress(
-			@RequestParam(value = "address", required = true) String address) {
+			@RequestParam(value = "address", required = true) String address) throws DataNotFoundException {
 		return new ResponseEntity<>(alertsService.getListOfInhabitantsAtAnAddress(address), HttpStatus.OK);
 
 	}
@@ -78,9 +82,10 @@ public class AlertsController {
 	 * 
 	 * @param stations
 	 * @return
+	 * @throws DataNotFoundException 
 	 */
 	@GetMapping("/flood/stations")
-	public ResponseEntity<List<InfoStationDTO>> listOfInhabitantConcernedByAStation(@RequestParam List<Integer> stations) {
+	public ResponseEntity<List<InfoStationDTO>> listOfInhabitantConcernedByAStation(@RequestParam List<Integer> stations) throws DataNotFoundException {
 		return new ResponseEntity<>(alertsService.getListOfInhabitantsForAStation(stations), HttpStatus.OK);
 
 	}

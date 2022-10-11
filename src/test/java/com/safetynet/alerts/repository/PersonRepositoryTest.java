@@ -50,19 +50,19 @@ public class PersonRepositoryTest {
 	}
 
 	@Test
-	public void updatePersonTest() throws IOException {
-		//Given : an updated person : new address and so on
-		Person person = new Person("firstName1", "lastName1", "address1New", "city1New", "1234", "0123456789", "email1New");
+	public void updatePersonTest() {
+		// Given : an updated person : new address and so on
+		Person person = new Person("firstName1", "lastName1", "address1New", "city1New", "1234", "0123456789",
+				"email1New");
 		// when
 		Person result = personRepository.updatePerson(person);
 		// then
 		assertThat(result).isEqualTo(person);
-
 	}
 
 	@Tag("findbyName")
 	@Test
-	public void findPersonByNameAndFirstName_withAnExistingPerson_ShouldReturnOK() throws IOException {
+	public void findPersonByNameAndFirstName_withAnExistingPerson_ShouldReturnOK() {
 		// Given : the persons have already been loaded within the initPersons method
 		// When
 		Person result = personRepository.findPersonByNameAndFirstName("lastName1", "firstName1");
@@ -73,7 +73,7 @@ public class PersonRepositoryTest {
 
 	@Tag("findbyName")
 	@Test
-	public void findPersonByNameAndFirstName_withAnNONExistingPerson_ShouldReturnNull() throws IOException {
+	public void findPersonByNameAndFirstName_withAnNONExistingPerson_ShouldReturnNull() {
 		// Given : the persons have already been loaded within the initPersons method
 		// When
 		Person result = personRepository.findPersonByNameAndFirstName("lastName99", "firstName1");
@@ -84,7 +84,7 @@ public class PersonRepositoryTest {
 
 	@Tag("findbyName")
 	@Test
-	public void findPersonByName_withAnExistingPerson_ShouldReturnOK() throws IOException {
+	public void findPersonByName_withAnExistingPerson_ShouldReturnOK() {
 		// Given : the persons have already been loaded within the initPersons method
 		// When
 		List<Person> result = personRepository.findPersonsByName("lastName1");
@@ -95,7 +95,7 @@ public class PersonRepositoryTest {
 
 	@Tag("findbyName")
 	@Test
-	public void findPersonByName_withAnNONExistingPerson_ShouldReturnAnEmptyList() throws IOException {
+	public void findPersonByName_withAnNONExistingPerson_ShouldReturnAnEmptyList() {
 		// Given : the persons have already been loaded within the initPersons method
 		// When
 		List<Person> result = personRepository.findPersonsByName("lastName99");
@@ -125,7 +125,7 @@ public class PersonRepositoryTest {
 
 		assertThat(result).isEmpty();
 	}
-	
+
 	@Tag("findbyAddress")
 	@Test
 	public void findPersonByAddress_withAnExistingAddress_ShouldReturnOK() throws IOException {

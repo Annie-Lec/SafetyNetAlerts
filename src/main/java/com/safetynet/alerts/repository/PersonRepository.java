@@ -1,6 +1,5 @@
 package com.safetynet.alerts.repository;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -80,8 +79,7 @@ public class PersonRepository {
 	 * 
 	 * @param person
 	 */
-
-	public Person updatePerson(Person person) throws IOException {
+	public Person updatePerson(Person person)  {
 		logger.debug("update a person");
 		Person persontoUpdate = findPersonByNameAndFirstName(person.getLastName(), person.getFirstName());
 		// l'update se fait par suppression de l'ancienne Personne puis ajout de la
@@ -105,9 +103,8 @@ public class PersonRepository {
 	 * 
 	 * @param address
 	 */
-	public List<Person> findPersonsByAddress(String address) throws IOException {
+	public List<Person> findPersonsByAddress(String address)  {
 		logger.debug("find a list of persons at an address");
-		// System.out.println("find a list of persons at an address");
 		return persons.stream().filter(p -> p.getAddress().equalsIgnoreCase(address)).collect(Collectors.toList());
 	}
 
@@ -116,9 +113,8 @@ public class PersonRepository {
 	 * 
 	 * @param address
 	 */
-	public List<Person> findPersonsByCity(String city) throws IOException {
+	public List<Person> findPersonsByCity(String city)  {
 		logger.debug("find a list of persons living in the city ");
-		System.out.println("find a list of persons living in the city");
 		return persons.stream().filter(p -> p.getCity().equalsIgnoreCase(city)).collect(Collectors.toList());
 	}
 
@@ -127,7 +123,7 @@ public class PersonRepository {
 	 * 
 	 * @param address
 	 */
-	public List<Person> findPersonsByName(String name) throws IOException {
+	public List<Person> findPersonsByName(String name)  {
 		logger.debug("find a list of persons with the same name : {}", name);
 		System.out.println("find a list of persons with the same name");
 		return persons.stream().filter(p -> p.getLastName().equalsIgnoreCase(name)).collect(Collectors.toList());
@@ -139,9 +135,8 @@ public class PersonRepository {
 	 * @param name
 	 * @param firstName
 	 */
-	public Person findPersonByNameAndFirstName(String name, String firstName) throws IOException {
+	public Person findPersonByNameAndFirstName(String name, String firstName) {
 		logger.debug("find THE person with the given first name and Last name: ");
-		System.out.println("find a list of persons with the same name");
 		return persons.stream().filter(p -> p.getLastName().equalsIgnoreCase(name))
 				.filter(p -> p.getFirstName().equalsIgnoreCase(firstName)).findFirst().orElse(null);
 	}

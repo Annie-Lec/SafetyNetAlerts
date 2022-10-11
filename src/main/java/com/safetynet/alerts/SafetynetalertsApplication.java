@@ -1,13 +1,12 @@
 package com.safetynet.alerts;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.safetynet.alerts.service.AlertsService;
-import com.safetynet.alerts.service.FireStationService;
-import com.safetynet.alerts.service.PersonService;
+
 
 @SpringBootApplication
 public class SafetynetalertsApplication  {

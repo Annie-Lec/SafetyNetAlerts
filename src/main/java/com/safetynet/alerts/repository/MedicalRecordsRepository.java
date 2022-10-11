@@ -1,9 +1,7 @@
 package com.safetynet.alerts.repository;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -77,24 +75,36 @@ public class MedicalRecordsRepository {
 	 * @param name
 	 * @param firstName
 	 */
-	public MedicalRecords findMRByNameAndFirstName(String name, String firstName) throws IOException {
+	public MedicalRecords findMRByNameAndFirstName(String name, String firstName)  {
 		logger.debug("find THE Medical Records with the given first name and Last name: ");
 		return medicalRecords.stream().filter(p -> p.getLastName().equalsIgnoreCase(name))
-				.filter(p -> p.getFirstName().equalsIgnoreCase(firstName)).findFirst().get();
+				.filter(p -> p.getFirstName().equalsIgnoreCase(firstName)).findFirst().orElse(null);
 	}
 	
 	
+	/**
+	 * update a medical records by deleting the old record and adding the updated one
+	 * @param mr a medicla records
+	 * @return
+	 */
+	public MedicalRecords updateMedicalRecords(MedicalRecords mr) {
+		logger.debug("update a Medical Record");
+		MedicalRecords mrToUpdate = findMRByNameAndFirstName(mr.getLastName(), mr.getFirstName());
+		deleteMedicalRecords(mrToUpdate);
+		addMedicalRecords(mr);
+		return mr;
+	}
 	/**
 	 * Retrieve the medical records for all the people with the same family name 
 	 * 
 	 * @param name
 	 * 
 	 */
-	public List<MedicalRecords> findMRByFamilyName(String name) throws IOException {
-		logger.debug("find THE Medical Records for all the people with the same family name: ");
-		return medicalRecords.stream().filter(p -> p.getLastName().equalsIgnoreCase(name))
-				.collect(Collectors.toList());
-	}
+//	public List<MedicalRecords> findMRByFamilyName(String name) {
+//		logger.debug("find THE Medical Records for all the people with the same family name: ");
+//		return medicalRecords.stream().filter(p -> p.getLastName().equalsIgnoreCase(name))
+//				.collect(Collectors.toList());
+//	}
 
 
 
