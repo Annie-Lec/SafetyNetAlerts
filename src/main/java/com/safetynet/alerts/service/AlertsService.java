@@ -129,7 +129,7 @@ public class AlertsService {
 	 * @return the List of children / others at an address
 	 */
 
-	public List<ListOfChildAlertDTO> getListOfChildrenAtAnAdress(String address) {
+	public ListOfChildAlertDTO getListOfChildrenAtAnAdress(String address) {
 		logger.info("create List of info by children at an address : getListOfChildrenAtAnAdress ");
 
 		List<Person> personsAtAnAddress = new ArrayList<>();
@@ -138,27 +138,32 @@ public class AlertsService {
 		int age;
 		int childAtTheAddress = 0;
 
-		List<ListOfChildAlertDTO> listChildAlert = new ArrayList<>();
+		ListOfChildAlertDTO listChildAlert = new ListOfChildAlertDTO();
 
-		personsAtAnAddress = personService.findPersonsByAddress(address);
+		try {
+			// We have to manage exception : data (address ) not found
+			personsAtAnAddress = personService.findPersonsByAddress(address);
 
-		for (Person p : personsAtAnAddress) {
-			MedicalRecords medicalRecords;
+			for (Person p : personsAtAnAddress) {
+				MedicalRecords medicalRecords;
 
-			medicalRecords = medicalRecordsService.findMRByNameAndFirstName(p.getLastName(), p.getFirstName());
+				medicalRecords = medicalRecordsService.findMRByNameAndFirstName(p.getLastName(), p.getFirstName());
 
-			age = AgeCalculator.calculate(medicalRecords.getBirthdate());
-			if (age <= 18) {
+				age = AgeCalculator.calculate(medicalRecords.getBirthdate());
+				if (age <= 18) {
 
-				childrenCovered.add(new NameFirstnameAndAgeDTO(p.getLastName(), p.getFirstName(), age));
-				childAtTheAddress++;
-			} else {
-				adults.add(new NameAndFirstNameDTO(p.getFirstName(), p.getLastName()));
+					childrenCovered.add(new NameFirstnameAndAgeDTO( p.getFirstName(),p.getLastName(), age));
+					childAtTheAddress++;
+				} else {
+					adults.add(new NameAndFirstNameDTO( p.getLastName(),p.getFirstName()));
+				}
 			}
+		} catch (DataNotFoundException e) {
+			e.printStackTrace();
 		}
 
 		if (childAtTheAddress > 0) {
-			listChildAlert.add(new ListOfChildAlertDTO(childrenCovered, adults));
+			listChildAlert =new ListOfChildAlertDTO(childrenCovered, adults);
 
 			return listChildAlert;
 		} else {
@@ -178,30 +183,37 @@ public class AlertsService {
 	 * @return the list of inhabitants at an address
 	 * @throws DataNotFoundException
 	 */
-	public List<InfoAddressDTO> getListOfInhabitantsAtAnAddress(String address) throws DataNotFoundException {
+	public InfoAddressDTO getListOfInhabitantsAtAnAddress(String address) {
 		logger.info("create List of info by inhabitants at an address : getListOfInhabitantsAtAnAddress ");
 
 		List<Person> personsAtAnAddress = new ArrayList<>();
 		List<InhabitantsAtAnaddressDTO> inhabitantsAtAnaddressDTO = new ArrayList<>();
-		List<InfoAddressDTO> listOfInhabitants = new ArrayList<>();
+		InfoAddressDTO listOfInhabitants =null ;
 		int fireStation;
 		int age;
 
-		fireStation = fireStationService.findTheNumberOfFirestationByAddress(address);
-		personsAtAnAddress = personService.findPersonsByAddress(address);
+		try {
+			fireStation = fireStationService.findTheNumberOfFirestationByAddress(address);
+			personsAtAnAddress = personService.findPersonsByAddress(address);
 
-		for (Person p : personsAtAnAddress) {
-			MedicalRecords medicalRecords;
-			medicalRecords = medicalRecordsService.findMRByNameAndFirstName(p.getLastName(), p.getFirstName());
-			age = AgeCalculator.calculate(medicalRecords.getBirthdate());
+			for (Person p : personsAtAnAddress) {
+				MedicalRecords medicalRecords;
+				medicalRecords = medicalRecordsService.findMRByNameAndFirstName(p.getLastName(), p.getFirstName());
+				age = AgeCalculator.calculate(medicalRecords.getBirthdate());
 
-			inhabitantsAtAnaddressDTO.add(new InhabitantsAtAnaddressDTO(p.getLastName(), p.getFirstName(), p.getPhone(),
-					age, medicalRecords.getMedications(), medicalRecords.getAllergies()));
+				inhabitantsAtAnaddressDTO.add(new InhabitantsAtAnaddressDTO(p.getLastName(), p.getFirstName(),
+						p.getPhone(), age, medicalRecords.getMedications(), medicalRecords.getAllergies()));
 
+			}
+
+//			listOfInhabitants.add(new InfoAddressDTO(inhabitantsAtAnaddressDTO, "address : " + address,
+//					"fireStation : " + fireStation));
+			listOfInhabitants = new InfoAddressDTO(inhabitantsAtAnaddressDTO, address, fireStation);
+			
+			
+		} catch (DataNotFoundException e) {
+			e.printStackTrace();
 		}
-
-		listOfInhabitants.add(
-				new InfoAddressDTO(inhabitantsAtAnaddressDTO, "address : " + address, "fireStation : " + fireStation));
 
 		return listOfInhabitants;
 
@@ -272,32 +284,40 @@ public class AlertsService {
 		logger.info("create List of info by person with given name : getInformationsForAGivenPersonAndHisFamily ");
 
 		Person personWithTheGoodNameAndFirstName = new Person();
-		List<Person> personsWiththeSameName = personService.findPersonsByLastName(lastName);
+		List<Person> personsWiththeSameName;
 		List<InfoForFirstAndLastNameDTO> infoForFirstAndLastName = new ArrayList<>();
 		MedicalRecords medicalRecords;
 		int age;
 
-		// First for the people with the good name AND firstName
-		personWithTheGoodNameAndFirstName = personService.findPersonByLastNameAndFirstName(firstName, lastName);
-		medicalRecords = medicalRecordsService.findMRByNameAndFirstName(lastName, firstName);
-		age = AgeCalculator.calculate(medicalRecords.getBirthdate());
+		try {
+			// We could have exception on searching by name : data not found to manage
+			personsWiththeSameName = personService.findPersonsByLastName(lastName);
 
-		infoForFirstAndLastName.add(new InfoForFirstAndLastNameDTO(lastName, firstName,
-				personWithTheGoodNameAndFirstName.getAddress(), personWithTheGoodNameAndFirstName.getEmail(), age,
-				medicalRecords.getMedications(), medicalRecords.getAllergies()));
+			// First for the people with the good name AND firstName
+			personWithTheGoodNameAndFirstName = personService.findPersonByLastNameAndFirstName(lastName, firstName);
+			medicalRecords = medicalRecordsService.findMRByNameAndFirstName(lastName, firstName);
+			age = AgeCalculator.calculate(medicalRecords.getBirthdate());
 
-		// Second the other people with the same name
-		for (Person p : personsWiththeSameName) {
-			if (!p.getFirstName().equals(firstName)) {
+			infoForFirstAndLastName.add(new InfoForFirstAndLastNameDTO(lastName, firstName,
+					personWithTheGoodNameAndFirstName.getAddress(), personWithTheGoodNameAndFirstName.getEmail(), age,
+					medicalRecords.getMedications(), medicalRecords.getAllergies()));
 
-				medicalRecords = medicalRecordsService.findMRByNameAndFirstName(p.getLastName(), p.getFirstName());
-				age = AgeCalculator.calculate(medicalRecords.getBirthdate());
+			// Second the other people with the same name
+			for (Person p : personsWiththeSameName) {
+				if (!p.getFirstName().equals(firstName)) {
 
-				infoForFirstAndLastName
-						.add(new InfoForFirstAndLastNameDTO(p.getLastName(), p.getFirstName(), p.getAddress(),
-								p.getEmail(), age, medicalRecords.getMedications(), medicalRecords.getAllergies()));
+					medicalRecords = medicalRecordsService.findMRByNameAndFirstName(p.getLastName(), p.getFirstName());
+					age = AgeCalculator.calculate(medicalRecords.getBirthdate());
+
+					infoForFirstAndLastName
+							.add(new InfoForFirstAndLastNameDTO(p.getLastName(), p.getFirstName(), p.getAddress(),
+									p.getEmail(), age, medicalRecords.getMedications(), medicalRecords.getAllergies()));
+				}
+
 			}
-
+		} catch (DataNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		return infoForFirstAndLastName;
@@ -311,6 +331,7 @@ public class AlertsService {
 	 * @param city
 	 * @return the List<String> of email of inhabitants to allow emergency services
 	 *         to send message
+	 * @throws DataNotFoundException
 	 * 
 	 */
 	public List<String> getEmailforPersonsInTheCity(String city) {
@@ -319,9 +340,14 @@ public class AlertsService {
 		List<Person> personsInTheCity = new ArrayList<>();
 		List<String> email = new ArrayList<>();
 
-		personsInTheCity.addAll(personService.findPersonsByCity(city));
-		email = personsInTheCity.stream().map(Person::getEmail).distinct().collect(Collectors.toList());
+		try {
+			personsInTheCity.addAll(personService.findPersonsByCity(city));
 
+			email = personsInTheCity.stream().map(Person::getEmail).distinct().collect(Collectors.toList());
+		} catch (DataNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return email;
 
 	}

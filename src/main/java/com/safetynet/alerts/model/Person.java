@@ -1,5 +1,7 @@
 package com.safetynet.alerts.model;
 
+import java.util.Objects;
+
 /**
  * 
  * Person class, is used to contain person's informations like first name, last
@@ -132,5 +134,27 @@ public class Person {
 		return "Person [firstName=" + firstName + ", lastName=" + lastName + ", address=" + address + ", city=" + city
 				+ ", zip=" + zip + ", phone=" + phone + ", email=" + email + "]";
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(address, city, email, firstName, lastName, phone, zip);
+	}
+
+	//equals only with the primary key : name and first name
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Person other = (Person) obj;
+		return Objects.equals(firstName, other.firstName)
+				&& Objects.equals(lastName, other.lastName) 
+				;
+	}
+	
+	
 
 }

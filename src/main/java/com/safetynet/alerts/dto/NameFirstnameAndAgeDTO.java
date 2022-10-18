@@ -1,5 +1,6 @@
 package com.safetynet.alerts.dto;
 
+import java.util.Objects;
 
 /**
  * used by ListOfChildAlertDTO ; endpoint childAlert?address=<address>
@@ -58,6 +59,26 @@ public class NameFirstnameAndAgeDTO {
 	}
 	public void setAge(int age) {
 		this.age = age;
+	}
+
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(age, firstName, lastName);
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		NameFirstnameAndAgeDTO other = (NameFirstnameAndAgeDTO) obj;
+		return age == other.age && Objects.equals(firstName, other.firstName)
+				&& Objects.equals(lastName, other.lastName);
 	}
 
 	

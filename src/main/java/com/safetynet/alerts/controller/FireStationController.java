@@ -26,6 +26,7 @@ public class FireStationController {
 	private static final Logger logger = LogManager.getLogger("FireStationController");
 
 	@Autowired
+	
 	FireStationService fireStationService;
 
 	/**
@@ -43,35 +44,64 @@ public class FireStationController {
 	}
 
 	/**
-	 * http://localhost:8080/firestation?stationNumber=<station_number>
+	 * http://localhost:8080/firestation
 	 * 
 	 * @param firestation
-	 * @return
+	 * @return a message about the creation of a fire station
 	 * @throws AlreadyExistsException
 	 */
 	@PostMapping("/firestation")
 	public ResponseEntity<String> addFireStation(@RequestBody(required = true) FireStation fireStation)
 			throws AlreadyExistsException {
-		logger.debug("Postmapping - addFireStation");
+		try {
+			String result = fireStationService.addFireStation(fireStation);
 
-		return new ResponseEntity<String>(fireStationService.addFireStation(fireStation), HttpStatus.OK);
+			logger.debug("Postmapping - addFireStation");
+
+			return new ResponseEntity<String>(result, HttpStatus.OK);
+		} catch (AlreadyExistsException e) {
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+
+		}
 	}
 
+	/**
+	 * 
+	 * @param fireStation
+	 * @return a message about the delete done or not
+	 * @throws DataNotFoundException
+	 */
 	@DeleteMapping("/firestation")
 	public ResponseEntity<String> deleteFireStation(@RequestBody(required = true) FireStation fireStation)
 			throws DataNotFoundException {
 		logger.debug("DeleteMapping - deleteFireStation");
+		try {
+			String result = fireStationService.deleteFireStation(fireStation);
 
-		return new ResponseEntity<String>(fireStationService.deleteFireStation(fireStation), HttpStatus.OK);
+			return new ResponseEntity<String>(result, HttpStatus.OK);
+		} catch (DataNotFoundException e) {
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
 	}
-	
+
+	/**
+	 * 
+	 * @param fireStation
+	 * @return a message relative to the update of a fire station
+	 * @throws DataNotFoundException
+	 */
 	@PutMapping("/firestation")
 	public ResponseEntity<String> updDateFireStation(@RequestBody(required = true) FireStation fireStation)
 			throws DataNotFoundException {
 		logger.debug("PutMapping - updDateFireStation");
+		try {
+			String result = fireStationService.updateFireStation(fireStation);
 
-		return new ResponseEntity<String>(fireStationService.updateFireStation(fireStation), HttpStatus.OK);
+			return new ResponseEntity<String>(result, HttpStatus.OK);
+		} catch (DataNotFoundException e) {
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+
 	}
-
 
 }

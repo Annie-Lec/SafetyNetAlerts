@@ -31,6 +31,7 @@ public class MedicalRecordsRepository {
 	@PostConstruct
 	public void initMedicalRecords() {
 		logger.info("repository - initMedicalRecords()");
+		System.out.println("repository - initMedicalRecords() - initialize MR with the JSON File");
 		setMedicalRecords(medicalRecordsMapper.mapToMedicalRecordsClass((Any) dataSource.getReadDataMedicalRecords()));
 	}
 

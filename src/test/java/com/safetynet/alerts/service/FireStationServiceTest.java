@@ -20,6 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.safetynet.alerts.exceptions.AlreadyExistsException;
 import com.safetynet.alerts.exceptions.DataNotFoundException;
 import com.safetynet.alerts.model.FireStation;
 import com.safetynet.alerts.repository.FireStationRepository;
@@ -144,7 +145,7 @@ class FireStationServiceTest {
 
 	@Tag("AddFirestation")
 	@Test
-	void testAddFireStation_withANewFS_MustBeOK() {
+	void testAddFireStation_withANewFS_MustBeOK() throws AlreadyExistsException {
 
 		// given
 		when(fireStationRepositoryMock.findFireStationsByAddress(fireStationNew.getAddress())).thenReturn(null);
@@ -157,22 +158,21 @@ class FireStationServiceTest {
 
 	@Tag("AddFirestation")
 	@Test
-	void testAddFireStation_withAnOldFS_MustInformAddressAlreadyExists() {
+	void testAddFireStation_withAnOldFS_MustInformAddressAlreadyExists() throws AlreadyExistsException {
 		// given
-		when(fireStationRepositoryMock.findFireStationsByAddress(fireStationUnitaire.getAddress())).thenReturn(fireStationUnitaire);
-		// when
-		String result = fireStationService.addFireStation(fireStationUnitaire);
+		when(fireStationRepositoryMock.findFireStationsByAddress(fireStationUnitaire.getAddress()))
+				.thenReturn(fireStationUnitaire);
 		// then
-		assertThat(result).isEqualTo("A FireStation already exists at the address "+ fireStationUnitaire.getAddress());
+		assertThrows(AlreadyExistsException.class, () -> fireStationService.addFireStation(fireStationUnitaire));
 
 	}
 
 	@Tag("AddFirestation")
 	@Test
-	void testAddFireStation_withANumber0_MustBeKO_NoFS_Added() {
+	void testAddFireStation_withANumber0_MustBeKO_NoFS_Added() throws AlreadyExistsException {
 
 		// given
-		//fireStationKO
+		// fireStationKO
 		// when
 		String result = fireStationService.addFireStation(fireStationKO);
 		// then
@@ -182,45 +182,56 @@ class FireStationServiceTest {
 
 	@Tag("DeleteFirestation")
 	@Test
-	void testDeleteFireStation_withANewFS_MustBeKO() {
+	void testDeleteFireStation_withANewFS_MustBeKO() throws DataNotFoundException {
 
 		// given
 		when(fireStationRepositoryMock.findFireStationsByAddress(fireStationNew.getAddress())).thenReturn(null);
-		// when
-		String result = fireStationService.deleteFireStation(fireStationNew);
+
 		// then
-		assertThat(result).isEqualTo("No Fire station Deleted, no such station found in the database");
-	
-	}
-
-	@Tag("DeleteFirestation")
-	@Test
-	void testDeleteFireStation_withAnOldFS_MustBeOK() {
+		assertThrows(DataNotFoundException.class, () -> fireStationService.deleteFireStation(fireStationNew));
 
 	}
 
 	@Tag("DeleteFirestation")
 	@Test
-	void testDeleteFireStation_withANumver0_MustBeKO() {
+	void testDeleteFireStation_withAnOldFS_MustBeOK() throws DataNotFoundException {
+		// given
+		when(fireStationRepositoryMock.findFireStationsByAddress(fireStationUnitaire.getAddress()))
+				.thenReturn(fireStationUnitaire);
+		// when
+		String result = fireStationService.deleteFireStation(fireStationUnitaire);
+		// then
+		assertThat(result).isEqualTo("Fire Station : " + fireStationUnitaire.getAddress() + " - station number : "
+				+ fireStationUnitaire.getStation() + " has been deleted");
 
 	}
 
 	@Tag("UpdateFirestation")
 	@Test
-	void testUpdateFireStation_withANewFS_MustBeKO() {
+	void testUpdateFireStation_withANewFS_MustBeKO() throws DataNotFoundException{
+		// given
+		when(fireStationRepositoryMock.findFireStationsByAddress(fireStationNew.getAddress())).thenReturn(null);
+
+		// then
+		assertThrows(DataNotFoundException.class, () -> fireStationService.updateFireStation(fireStationNew));
+
 
 	}
 
 	@Tag("UpdateFirestation")
 	@Test
-	void testUpdateFireStation_withAnOldFS_MustBeOK() {
+	void testUpdateFireStation_withAnOldFS_MustBeOK() throws DataNotFoundException {
+		// given
+		when(fireStationRepositoryMock.findFireStationsByAddress(fireStationUnitaire.getAddress()))
+				.thenReturn(fireStationUnitaire);
+		// when
+		String result = fireStationService.updateFireStation(fireStationUnitaire);
+		// then
+		assertThat(result).isEqualTo("Fire Station : " + fireStationUnitaire.getAddress() + " - station number : "
+				+ fireStationUnitaire.getStation() + " has been updated");
+
 
 	}
 
-	@Tag("UpdateFirestation")
-	@Test
-	void testUpdateFireStation_withanUnknownAddress_MustBeKO() {
-
-	}
 
 }

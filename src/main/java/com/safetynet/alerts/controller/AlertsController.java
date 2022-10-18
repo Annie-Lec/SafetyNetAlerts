@@ -57,7 +57,7 @@ public class AlertsController {
 	 * @return
 	 */
 	@GetMapping("/childAlert")
-	public ResponseEntity<List<ListOfChildAlertDTO>> listOfChildrenConcerned(
+	public ResponseEntity<ListOfChildAlertDTO> listOfChildrenConcerned(
 			@RequestParam(value = "address", required = true) String address) {
 		return new ResponseEntity<>(alertsService.getListOfChildrenAtAnAdress(address), HttpStatus.OK);
 
@@ -71,7 +71,7 @@ public class AlertsController {
 	 * @throws DataNotFoundException 
 	 */
 	@GetMapping("/fire")
-	public ResponseEntity<List<InfoAddressDTO>> listOfInhabitantAtAnAddress(
+	public ResponseEntity<InfoAddressDTO> listOfInhabitantAtAnAddress(
 			@RequestParam(value = "address", required = true) String address) throws DataNotFoundException {
 		return new ResponseEntity<>(alertsService.getListOfInhabitantsAtAnAddress(address), HttpStatus.OK);
 

@@ -48,7 +48,7 @@ public class PersonRepository {
 	 */
 	@PostConstruct
 	public void initPersons() {
-		System.out.println("initPersons initPersons initPersons");
+		System.out.println("repository : initialize Person with the JSON File");
 		setPersons(personMapper.mapToPersonClass((Any) dataSource.getReadDataPersons()));
 	}
 
@@ -59,7 +59,6 @@ public class PersonRepository {
 	 */
 	public void addPerson(Person person) {
 		logger.info("saving a person in the data listof persons", person);
-		System.out.println(person);
 		this.persons.add(person);
 	}
 
