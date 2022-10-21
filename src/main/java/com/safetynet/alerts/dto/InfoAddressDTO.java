@@ -20,6 +20,9 @@ public class InfoAddressDTO {
 		this.address = address;
 		this.fireStationNumber = fireStationNumber;
 	}
+	
+	public InfoAddressDTO() {}
+	
 	public List<InhabitantsAtAnaddressDTO> getInhabitantsAtAnaddress() {
 		return inhabitantsAtAnaddress;
 	}

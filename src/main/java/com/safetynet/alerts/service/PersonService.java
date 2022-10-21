@@ -116,8 +116,9 @@ public class PersonService {
 	 * @param person
 	 * @return a message about the creation of a person
 	 * @throws AlreadyExistsException
+	 * @throws DataNotFoundException 
 	 */
-	public String addPerson(Person person) throws AlreadyExistsException {
+	public String addPerson(Person person) throws AlreadyExistsException, DataNotFoundException {
 		String message;
 		if (!(person.getFirstName().isEmpty() || person.getLastName().isEmpty())) {
 			Person personToAdd = personRepository.findPersonByNameAndFirstName(person.getLastName(),
@@ -131,7 +132,9 @@ public class PersonService {
 				throw new AlreadyExistsException(message);
 			}
 		} else {
-			message = "Name or FirstName don't have to be null";
+			message = "Name or FirstName Empty : unable to add/delete/update";
+			logger.error(message);
+			throw new DataNotFoundException(message);
 		}
 		return message;
 	}
@@ -151,12 +154,13 @@ public class PersonService {
 				personRepository.deletePerson(person);
 				message = "Person : " + person.getLastName() + " - " + person.getFirstName() + " has been deleted";
 			} else {
-				message = "No person with this name and firstName could'nt be found : unable to delete";
+				message = "No person with this name and firstName could be found : unable to delete";
 				logger.error(message);
 				throw new DataNotFoundException(message);
 			}
 		} else {
-			message = "Name or FirstName Empty : unable to delete";
+			message = "Name or FirstName Empty : unable to add/delete/update";
+			logger.error(message);
 			throw new DataNotFoundException(message);
 		}
 		return message;
@@ -177,12 +181,13 @@ public class PersonService {
 				personRepository.updatePerson(person);
 				message = "Person : " + person.getLastName() + " - " + person.getFirstName() + " has been updated";
 			} else {
-				message = "No person with this name and firstName could'nt be found : unable to update";
+				message = "No person with this name and firstName could be found : unable to update";
 				logger.error(message);
 				throw new DataNotFoundException(message);
 			}
 		} else {
-			message = "Name or FirstName Empty : unable to update";
+			message = "Name or FirstName Empty : unable to add/delete/update";
+			logger.error(message);
 			throw new DataNotFoundException(message);
 		}
 		return message;

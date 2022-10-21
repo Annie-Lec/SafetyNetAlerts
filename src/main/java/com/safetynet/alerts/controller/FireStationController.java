@@ -26,8 +26,11 @@ public class FireStationController {
 	private static final Logger logger = LogManager.getLogger("FireStationController");
 
 	@Autowired
-	
+
 	FireStationService fireStationService;
+
+	private final ResponseEntity<String> responseForBadRequest = ResponseEntity.badRequest()
+			.body("Address Empty or station null : unable to add/delete/update");
 
 	/**
 	 * http://localhost:8080/firestation
@@ -49,19 +52,27 @@ public class FireStationController {
 	 * @param firestation
 	 * @return a message about the creation of a fire station
 	 * @throws AlreadyExistsException
+	 * @throws DataNotFoundException
 	 */
 	@PostMapping("/firestation")
 	public ResponseEntity<String> addFireStation(@RequestBody(required = true) FireStation fireStation)
-			throws AlreadyExistsException {
-		try {
-			String result = fireStationService.addFireStation(fireStation);
+			throws AlreadyExistsException, DataNotFoundException {
+		if (fireStation.getAddress().isEmpty() || fireStation.getStation() <= 0) {
+			logger.error("Invalid request  HttpStatus : ", HttpStatus.BAD_REQUEST);
+			return responseForBadRequest;
+		} else {
+			try {
+				String result = fireStationService.addFireStation(fireStation);
 
-			logger.debug("Postmapping - addFireStation");
+				logger.debug("Postmapping - addFireStation");
 
-			return new ResponseEntity<String>(result, HttpStatus.OK);
-		} catch (AlreadyExistsException e) {
-			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<String>(result, HttpStatus.OK);
+			} catch (AlreadyExistsException e) {
+				return new ResponseEntity<String>(
+						"A FireStation already exists at the address " + fireStation.getAddress(),
+						HttpStatus.BAD_REQUEST);
 
+			}
 		}
 	}
 
@@ -75,12 +86,18 @@ public class FireStationController {
 	public ResponseEntity<String> deleteFireStation(@RequestBody(required = true) FireStation fireStation)
 			throws DataNotFoundException {
 		logger.debug("DeleteMapping - deleteFireStation");
-		try {
-			String result = fireStationService.deleteFireStation(fireStation);
+		if (fireStation.getAddress().isEmpty() || fireStation.getStation() <= 0) {
+			logger.error("Invalid request  HttpStatus : ", HttpStatus.BAD_REQUEST);
+			return responseForBadRequest;
+		} else {
+			try {
+				String result = fireStationService.deleteFireStation(fireStation);
 
-			return new ResponseEntity<String>(result, HttpStatus.OK);
-		} catch (DataNotFoundException e) {
-			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<String>(result, HttpStatus.OK);
+			} catch (DataNotFoundException e) {
+				return new ResponseEntity<String>("No Fire station Deleted, no such station found in the database",
+						HttpStatus.BAD_REQUEST);
+			}
 		}
 	}
 
@@ -94,14 +111,20 @@ public class FireStationController {
 	public ResponseEntity<String> updDateFireStation(@RequestBody(required = true) FireStation fireStation)
 			throws DataNotFoundException {
 		logger.debug("PutMapping - updDateFireStation");
-		try {
-			String result = fireStationService.updateFireStation(fireStation);
+		if (fireStation.getAddress().isEmpty() || fireStation.getStation() <= 0) {
+			logger.error("Invalid request  HttpStatus : ", HttpStatus.BAD_REQUEST);
+			return responseForBadRequest;
+		} else {
 
-			return new ResponseEntity<String>(result, HttpStatus.OK);
-		} catch (DataNotFoundException e) {
-			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			try {
+				String result = fireStationService.updateFireStation(fireStation);
+
+				return new ResponseEntity<String>(result, HttpStatus.OK);
+			} catch (DataNotFoundException e) {
+				return new ResponseEntity<String>("No Fire station updated, no such station found in the database",
+						HttpStatus.BAD_REQUEST);
+			}
 		}
-
 	}
 
 }

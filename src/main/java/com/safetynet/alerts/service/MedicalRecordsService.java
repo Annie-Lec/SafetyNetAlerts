@@ -52,8 +52,10 @@ public class MedicalRecordsService {
 	 * @param medicalRecords
 	 * @return a message about the creation of a medical Records
 	 * @throws AlreadyExistsException
+	 * @throws DataNotFoundException
 	 */
-	public String addMedicalRecords(MedicalRecords medicalRecords) throws AlreadyExistsException {
+	public String addMedicalRecords(MedicalRecords medicalRecords)
+			throws AlreadyExistsException, DataNotFoundException {
 		String message;
 
 		if (!(medicalRecords.getFirstName().isEmpty() || medicalRecords.getLastName().isEmpty())) {
@@ -69,12 +71,14 @@ public class MedicalRecordsService {
 				throw new AlreadyExistsException(message);
 			}
 		} else {
-			message = "Name or FirstName don't have to be null";
+			message = "Name or FirstName Empty : unable to add/delete/update";
+			logger.error(message);
+			throw new DataNotFoundException(message);
 		}
 
 		return message;
 	}
-	
+
 	/**
 	 * 
 	 * @param medicalRecords
@@ -84,7 +88,12 @@ public class MedicalRecordsService {
 	public String deleteMedicalRecords(MedicalRecords medicalRecords) throws DataNotFoundException {
 		String message;
 
-		if (!(medicalRecords.getFirstName().isEmpty() || medicalRecords.getLastName().isEmpty())) {
+		if ((medicalRecords.getFirstName().isEmpty() || medicalRecords.getLastName().isEmpty())) {
+			message = "Name or FirstName Empty : unable to add/delete/update";
+			logger.error(message);
+			throw new DataNotFoundException(message);
+		} else {
+
 			MedicalRecords MRToDelete = medicalRecordsRepository.findMRByNameAndFirstName(medicalRecords.getLastName(),
 					medicalRecords.getFirstName());
 			if (MRToDelete != null) {
@@ -92,16 +101,16 @@ public class MedicalRecordsService {
 				message = "MedicalRecords for : " + medicalRecords.getLastName() + " - " + medicalRecords.getFirstName()
 						+ " has been deleted";
 			} else {
-				message = "No MedicalRecords with this name and firstName could'nt be found : unable to delete";
+				message = "No MedicalRecords with this name and firstName could be found : unable to delete";
 				logger.error(message);
 				throw new DataNotFoundException(message);
 			}
-		} else {
-			message = "Name or FirstName don't have to be null";
+
 		}
 
 		return message;
 	}
+
 	/**
 	 * 
 	 * @param medicalRecords
@@ -111,7 +120,12 @@ public class MedicalRecordsService {
 	public String updateMedicalRecords(MedicalRecords medicalRecords) throws DataNotFoundException {
 		String message;
 
-		if (!(medicalRecords.getFirstName().isEmpty() || medicalRecords.getLastName().isEmpty())) {
+		if (medicalRecords.getFirstName().isEmpty() || medicalRecords.getLastName().isEmpty()) {
+			message = "Name or FirstName Empty : unable to add/delete/update";
+			logger.error(message);
+			throw new DataNotFoundException(message);
+		} else {
+
 			MedicalRecords MRToUpdate = medicalRecordsRepository.findMRByNameAndFirstName(medicalRecords.getLastName(),
 					medicalRecords.getFirstName());
 			if (MRToUpdate != null) {
@@ -119,16 +133,14 @@ public class MedicalRecordsService {
 				message = "MedicalRecords for : " + medicalRecords.getLastName() + " - " + medicalRecords.getFirstName()
 						+ " has been updated";
 			} else {
-				message = "No MedicalRecords with this name and firstName could'nt be found : unable to update";
+				message = "No MedicalRecords with this name and firstName could be found : unable to update";
 				logger.error(message);
 				throw new DataNotFoundException(message);
 			}
-		} else {
-			message = "Name or FirstName don't have to be null";
+
 		}
 
 		return message;
 	}
-
 
 }

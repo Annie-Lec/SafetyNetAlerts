@@ -154,7 +154,7 @@ class PersonServiceTest {
 	}
 
 	@Test
-	void testAddPerson_withANewPerson_MustBeOK() throws AlreadyExistsException {
+	void testAddPerson_withANewPerson_MustBeOK() throws AlreadyExistsException, DataNotFoundException {
 		// given
 		when(personRepositoryMock.findPersonByNameAndFirstName(personNew.getLastName(), personNew.getFirstName()))
 				.thenReturn(null);
@@ -176,11 +176,18 @@ class PersonServiceTest {
 	}
 
 	@Test
-	void testAddPerson_WithABadNameOrFirstName() throws AlreadyExistsException {
-		// when
-		String result = personService.addPerson(personKO);
+	void testAddPerson_WithABadNameOrFirstName() throws AlreadyExistsException, DataNotFoundException {
+	
 		// Then
-		assertThat(result).isEqualTo("Name or FirstName don't have to be null");
+		assertThrows(DataNotFoundException.class, () -> personService.addPerson(personKO));
+
+	}
+
+	@Test
+	void testDeletePerson_WithABadNameOrFirstName() throws DataNotFoundException {
+	
+		// Then
+		assertThrows(DataNotFoundException.class, () -> personService.deletePerson(personKO));
 
 	}
 
@@ -228,6 +235,14 @@ class PersonServiceTest {
 		// then
 		assertThat(result).isEqualTo(
 				"Person : " + personExist.getLastName() + " - " + personExist.getFirstName() + " has been updated");
+	}
+	
+	@Test
+	void testUpdatePerson_WithABadNameOrFirstName() throws DataNotFoundException {
+	
+		// Then
+		assertThrows(DataNotFoundException.class, () -> personService.updatePerson(personKO));
+
 	}
 
 }

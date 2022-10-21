@@ -7,17 +7,17 @@ public class InfoStationDTO {
 	
 	int fireStationNumber;
 	String address;
-	List<InhabitantsAtAnaddressDTO> inhabitantsAtAnaddressDTO = new ArrayList<>();
+	List<InhabitantsAtAnaddressDTO> inhabitantsAtAnaddress = new ArrayList<>();
 	/**
 	 * @param fireStationNumber
 	 * @param address
 	 * @param inhabitantsAtAnaddressDTO
 	 */
 	public InfoStationDTO(int fireStationNumber, String address,
-			List<InhabitantsAtAnaddressDTO> inhabitantsAtAnaddressDTO) {
+			List<InhabitantsAtAnaddressDTO> inhabitantsAtAnaddress) {
 		this.fireStationNumber = fireStationNumber;
 		this.address = address;
-		this.inhabitantsAtAnaddressDTO = inhabitantsAtAnaddressDTO;
+		this.inhabitantsAtAnaddress = inhabitantsAtAnaddress;
 	}
 	public int getFireStationNumber() {
 		return fireStationNumber;
@@ -31,11 +31,11 @@ public class InfoStationDTO {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	public List<InhabitantsAtAnaddressDTO> getInhabitantsAtAnaddressDTO() {
-		return inhabitantsAtAnaddressDTO;
+	public List<InhabitantsAtAnaddressDTO> getInhabitantsAtAnaddress() {
+		return inhabitantsAtAnaddress;
 	}
-	public void setInhabitantsAtAnaddressDTO(List<InhabitantsAtAnaddressDTO> inhabitantsAtAnaddressDTO) {
-		this.inhabitantsAtAnaddressDTO = inhabitantsAtAnaddressDTO;
+	public void setInhabitantsAtAnaddress(List<InhabitantsAtAnaddressDTO> inhabitantsAtAnaddress) {
+		this.inhabitantsAtAnaddress = inhabitantsAtAnaddress;
 	}
 	
 

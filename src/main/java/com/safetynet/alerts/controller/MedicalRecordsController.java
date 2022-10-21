@@ -27,7 +27,10 @@ public class MedicalRecordsController {
 	@Autowired
 	MedicalRecordsService medicalRecordsService;
 
-	@GetMapping("/medicalRecords")
+	private final ResponseEntity<String> responseForBadRequest = ResponseEntity.badRequest()
+			.body("Name or FirstName Empty : unable to add/delete/update");
+
+	@GetMapping("/medicalrecords")
 	public ResponseEntity<List<MedicalRecords>> getMedicalRecords() {
 		logger.debug("Getmapping - getMedicalRecords");
 		System.out.println("GetMapping MedicalRecords");
@@ -40,39 +43,52 @@ public class MedicalRecordsController {
 	 * @return a message about the creation of a medical records
 	 * 
 	 * @throws AlreadyExistsException
+	 * @throws DataNotFoundException 
 	 */
-	@PostMapping("/medicalRecord")
+	@PostMapping("/medicalrecord")
 	public ResponseEntity<String> addMedicalRecords(@RequestBody(required = true) MedicalRecords medicalRecords)
-			throws AlreadyExistsException {
-		try {
-			String result = medicalRecordsService.addMedicalRecords(medicalRecords);
+			throws AlreadyExistsException, DataNotFoundException {
+		if (medicalRecords.getFirstName().isEmpty() || medicalRecords.getLastName().isEmpty()) {
+			logger.error("Invalid request  HttpStatus : ", HttpStatus.BAD_REQUEST);
+			return responseForBadRequest;
+		} else {
 
-			logger.debug("Postmapping - addmedicalRecord");
+			try {
+				String result = medicalRecordsService.addMedicalRecords(medicalRecords);
 
-			return new ResponseEntity<String>(result, HttpStatus.OK);
-		} catch (AlreadyExistsException e) {
-			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+				logger.debug("Postmapping - addmedicalRecord");
+
+				return new ResponseEntity<String>(result, HttpStatus.OK);
+			} catch (AlreadyExistsException e) {
+				return new ResponseEntity<String>("A person already exists with this name and firstName", HttpStatus.BAD_REQUEST);
+			}
 		}
 	}
 
 	/**
 	 * 
 	 * @param medicalRecords
-	 * @return  a message relative to the deletion of a medical record
+	 * @return a message relative to the deletion of a medical record
 	 * @throws DataNotFoundException
 	 */
-	@DeleteMapping("/medicalRecord")
+	@DeleteMapping("/medicalrecord")
 	public ResponseEntity<String> deleteMedicalRecords(@RequestBody(required = true) MedicalRecords medicalRecords)
 			throws DataNotFoundException {
-		try {
-			String result = medicalRecordsService.deleteMedicalRecords(medicalRecords);
+		if (medicalRecords.getFirstName().isEmpty() || medicalRecords.getLastName().isEmpty()) {
+			logger.error("Invalid request  HttpStatus : ", HttpStatus.BAD_REQUEST);
+			return responseForBadRequest;
+		} else {
 
-			logger.debug("Postmapping - deletemedicalRecords");
+			try {
+				String result = medicalRecordsService.deleteMedicalRecords(medicalRecords);
 
-			return new ResponseEntity<String>(result, HttpStatus.OK);
-		} catch (DataNotFoundException e) {
-			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+				logger.debug("Postmapping - deletemedicalRecords");
 
+				return new ResponseEntity<String>(result, HttpStatus.OK);
+			} catch (DataNotFoundException e) {
+				return new ResponseEntity<String>("No MedicalRecords with this name and firstName could be found : unable to delete", HttpStatus.BAD_REQUEST);
+
+			}
 		}
 	}
 
@@ -82,18 +98,23 @@ public class MedicalRecordsController {
 	 * @return a message relative to a medicalRecord 's update
 	 * @throws DataNotFoundException
 	 */
-	@PutMapping("/medicalRecord")
+	@PutMapping("/medicalrecord")
 	public ResponseEntity<String> upddateMedicalRecords(@RequestBody(required = true) MedicalRecords medicalRecords)
 			throws DataNotFoundException {
-		try {
-			String result = medicalRecordsService.updateMedicalRecords(medicalRecords);
+		if (medicalRecords.getFirstName().isEmpty() || medicalRecords.getLastName().isEmpty()) {
+			logger.error("Invalid request  HttpStatus : ", HttpStatus.BAD_REQUEST);
+			return responseForBadRequest;
+		} else {
 
-			logger.debug("Putmapping - updatemedicalRecords");
+			try {
+				String result = medicalRecordsService.updateMedicalRecords(medicalRecords);
 
-			return new ResponseEntity<String>(result, HttpStatus.OK);
-		} catch (DataNotFoundException e) {
-			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+				logger.debug("Putmapping - updatemedicalRecords");
+
+				return new ResponseEntity<String>(result, HttpStatus.OK);
+			} catch (DataNotFoundException e) {
+				return new ResponseEntity<String>("No MedicalRecords with this name and firstName could be found : unable to update", HttpStatus.BAD_REQUEST);
+			}
 		}
 	}
-
 }

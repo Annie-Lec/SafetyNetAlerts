@@ -26,7 +26,8 @@ public class FireStationService {
 	 * Retrieve the list of FireStations for a number of station
 	 * 
 	 * @param number of the station
-	 * @return a list of firestation if the param is found in database Else return null
+	 * @return a list of firestation if the param is found in database Else return
+	 *         null
 	 */
 	public List<FireStation> findFireStationByNumber(int fireStation) {
 		logger.debug("find a list of addresses for a firestation : findFireStationByNumber");
@@ -43,6 +44,7 @@ public class FireStationService {
 
 	/**
 	 * Retrieve the list of addresses for a fire station
+	 * 
 	 * @return a list of address if the param is found in database Else return null
 	 * @param number of the station
 	 */
@@ -90,31 +92,34 @@ public class FireStationService {
 
 	/**
 	 * CREATE a FireStation
+	 * 
 	 * @return a message about the creation of a fire station
 	 * @param fireStation
+	 * @throws DataNotFoundException
 	 * 
 	 */
-	public String addFireStation(FireStation fireStation) throws AlreadyExistsException {
+	public String addFireStation(FireStation fireStation) throws AlreadyExistsException, DataNotFoundException {
 		logger.debug("Add a firestation  : number of a Fire Station with a new address");
 		String message;
 
-		if (!fireStation.getAddress().isEmpty() && !fireStation.getAddress().isBlank()
-				&& fireStation.getStation() > 0) {
-			//si adresse et numero de station sont corrects
+		if (fireStation.getAddress().isEmpty() || fireStation.getAddress().isBlank() || fireStation.getStation() <= 0) {
+			// si adresse vide ou numero =0
+			message = "No Fire station Added : missing address or firestation number null !";
+			throw new DataNotFoundException(message);
+		} else {
+			// si adresse et numero de station sont corrects
 			FireStation fireStationToAdd = fireStationRepository.findFireStationsByAddress(fireStation.getAddress());
 			if (fireStationToAdd == null) {
 				fireStationRepository.addFireStation(fireStation);
 				message = "Fire Station : " + fireStation.getAddress() + " - station number : "
 						+ fireStation.getStation() + " has been added";
 			} else {
-				//le fire station existe deja
+				// le fire station existe deja
 				message = "A FireStation already exists at the address " + fireStation.getAddress();
 				logger.error(message);
 				throw new AlreadyExistsException(message);
 			}
-		} else {
-			//si adresse vide ou numero =0
-			message = "No Fire station Added : missing address or firestation number null !";
+
 		}
 		return message;
 	}
@@ -130,24 +135,24 @@ public class FireStationService {
 
 		if (!fireStation.getAddress().isEmpty() && !fireStation.getAddress().isBlank()
 				&& fireStation.getStation() > 0) {
-			//si adresse et numero de station sont corrects
+			// si adresse et numero de station sont corrects
 			FireStation fireStationToDelete = fireStationRepository.findFireStationsByAddress(fireStation.getAddress());
-			//le FS n'est pas trouvé en base
+			// le FS n'est pas trouvé en base
 			if (fireStationToDelete == null) {
 				message = "No Fire station Deleted, no such station found in the database";
 				throw new DataNotFoundException(message);
-				//le FS existe en base alors on peut le supprimer
+				// le FS existe en base alors on peut le supprimer
 			} else if (fireStationToDelete.getStation() == fireStation.getStation()) {
 				fireStationRepository.deleteFireStation(fireStation);
 				message = "Fire Station : " + fireStation.getAddress() + " - station number : "
 						+ fireStation.getStation() + " has been deleted";
-				//un FS existe à cette adresse mais pas avec ce numero
+				// un FS existe à cette adresse mais pas avec ce numero
 			} else {
 				message = "Be Careful, a FireStation exists at the address " + fireStation.getAddress()
 						+ " but NOT with this number :" + fireStation.getStation();
 				logger.error(message);
 			}
-			//si adresse vide ou numero =0
+			// si adresse vide ou numero =0
 		} else {
 			message = "No Fire station Deleted : address not found or firestation number null !";
 			throw new DataNotFoundException(message);
@@ -157,6 +162,7 @@ public class FireStationService {
 
 	/**
 	 * Update a FireStation
+	 * 
 	 * @return a message about the update of a fire station
 	 * @param fireStation
 	 * 
@@ -167,16 +173,18 @@ public class FireStationService {
 
 		if (!fireStation.getAddress().isEmpty() && !fireStation.getAddress().isBlank()
 				&& fireStation.getStation() > 0) {
-			//si adresse et numero de station sont corrects
+			// si adresse et numero de station sont corrects
 			FireStation fireStationToUpdate = fireStationRepository.findFireStationsByAddress(fireStation.getAddress());
-			if (fireStationToUpdate != null) {
+			if (fireStationToUpdate == null) {
+				message = "No Fire station updated, no such station found in the database";
+				logger.error(message);
+				throw new DataNotFoundException(message);
+
+			} else {
 				fireStationRepository.updateFireStation(fireStation);
 				message = "Fire Station : " + fireStation.getAddress() + " - station number : "
 						+ fireStation.getStation() + " has been updated";
-			} else {
-				message = "A FireStation doesn't exist at the address " + fireStation.getAddress();
-				logger.error(message);
-				throw new DataNotFoundException(message);
+
 			}
 		} else {
 			message = "No Fire station updated : missing address ou firestation number null !";

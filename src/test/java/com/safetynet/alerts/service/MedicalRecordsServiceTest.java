@@ -92,7 +92,7 @@ class MedicalRecordsServiceTest {
 	}
 
 	@Test
-	void testAddMedicalRecords_withANewMR_MustBeOK() throws AlreadyExistsException {
+	void testAddMedicalRecords_withANewMR_MustBeOK() throws AlreadyExistsException, DataNotFoundException {
 		// given
 		when(medicalRecordsRepositoryMock.findMRByNameAndFirstName(MRNew.getLastName(), MRNew.getFirstName()))
 				.thenReturn(null);
@@ -113,11 +113,10 @@ class MedicalRecordsServiceTest {
 	}
 
 	@Test
-	void testAddMedicalRecords_WithABadNameOrFirstName() throws AlreadyExistsException {
-		// when
-		String result = medicalRecordsService.addMedicalRecords(MRKO);
+	void testAddMedicalRecords_WithABadNameOrFirstName() throws AlreadyExistsException, DataNotFoundException {
 		// Then
-		assertThat(result).isEqualTo("Name or FirstName don't have to be null");
+		assertThrows(DataNotFoundException.class, () -> medicalRecordsService.addMedicalRecords(MRKO));
+		
 
 	}
 

@@ -11,9 +11,9 @@ import java.util.List;
 public class InhabitantsCoveredDTO {
 	
 	/**
-	 * personsCoveredDTO contains informations [name, adddress, tel] about the people followed by a station
+	 * personsCovered contains informations [name, adddress, tel] about the people followed by a station
 	 */
-	private List<PersonsCoveredDTO> personsCoveredDTO = new ArrayList<>();
+	private List<PersonsCoveredDTO> personsCovered = new ArrayList<>();
 	/**
 	 * number of adults
 	 */
@@ -25,13 +25,13 @@ public class InhabitantsCoveredDTO {
 	
 	/**
 	 * Constructor using fields
-	 * @param personsCoveredDTO
+	 * @param personsCovered
 	 * @param nbAdults
 	 * @param nbChildren
 	 */
-	public InhabitantsCoveredDTO(List<PersonsCoveredDTO> personsCoveredDTO, int nbAdults, int nbChildren) {
+	public InhabitantsCoveredDTO(List<PersonsCoveredDTO> personsCovered, int nbAdults, int nbChildren) {
 		super();
-		this.personsCoveredDTO = personsCoveredDTO;
+		this.personsCovered = personsCovered;
 		this.nbAdults = nbAdults;
 		this.nbChildren = nbChildren;
 	}
@@ -42,11 +42,11 @@ public class InhabitantsCoveredDTO {
 	public InhabitantsCoveredDTO() {}
 	
 	
-	public List<PersonsCoveredDTO> getPersonsCoveredDTO() {
-		return personsCoveredDTO;
+	public List<PersonsCoveredDTO> getPersonsCovered() {
+		return personsCovered;
 	}
-	public void setPersonsCoveredDTO(List<PersonsCoveredDTO> personsCoveredDTO) {
-		this.personsCoveredDTO = personsCoveredDTO;
+	public void setPersonsCoveredDTO(List<PersonsCoveredDTO> personsCovered) {
+		this.personsCovered = personsCovered;
 	}
 	public int getNbAdults() {
 		return nbAdults;

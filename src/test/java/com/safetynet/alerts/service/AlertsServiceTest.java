@@ -111,7 +111,7 @@ class AlertsServiceTest {
 		// then
 		assertThat(result.getNbAdults()).isEqualTo(1);
 		assertThat(result.getNbChildren()).isEqualTo(0);
-		assertThat(result.getPersonsCoveredDTO()).isEqualTo(personTotTest);
+		assertThat(result.getPersonsCovered()).isEqualTo(personTotTest);
 	}
 
 	@Test
@@ -194,7 +194,7 @@ class AlertsServiceTest {
 		// then
 		assertThat(result.get(0).getAddress()).isEqualTo("address3");
 		assertThat(result.get(0).getFireStationNumber()).isEqualTo(2);
-		assertThat(result.get(0).getInhabitantsAtAnaddressDTO()).isEqualTo(inhabitantsAtAnaddress);
+		assertThat(result.get(0).getInhabitantsAtAnaddress()).isEqualTo(inhabitantsAtAnaddress);
 
 	}
 

@@ -1,11 +1,8 @@
 package com.safetynet.alerts;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.safetynet.alerts.service.AlertsService;
 
 
 @SpringBootApplication
@@ -22,8 +19,11 @@ public class SafetynetalertsApplication  {
 //	@Autowired
 //	FireStationService fireStationService = new FireStationService();
 	
-	@Autowired
-	AlertsService alertsService = new AlertsService();
+//	@Autowired
+//	AlertsService alertsService = new AlertsService();
+	
+//	@Autowired
+//	PersonService personService = new PersonService();
 
 	public static void main(String[] args) {
 		SpringApplication.run(SafetynetalertsApplication.class, args);

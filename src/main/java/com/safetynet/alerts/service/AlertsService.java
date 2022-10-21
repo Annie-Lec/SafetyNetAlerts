@@ -87,7 +87,7 @@ public class AlertsService {
 	public InhabitantsCoveredDTO getListOfPersonsCoveredByStation(int numberFireStation) throws DataNotFoundException {
 		logger.info("create List of people  for URL1 - getListOfPersonsCoveredByStation() ");
 
-		List<PersonsCoveredDTO> personsCoveredDTO = new ArrayList<>();
+		List<PersonsCoveredDTO> personsCovered = new ArrayList<>();
 		List<Person> personsAtAnAddress = new ArrayList<>();
 
 		int nbAdults = 0;
@@ -101,7 +101,7 @@ public class AlertsService {
 				personsAtAnAddress = personService.findPersonsByAddress(address);
 
 				for (Person p : personsAtAnAddress) {
-					personsCoveredDTO.add(
+					personsCovered.add(
 							new PersonsCoveredDTO(p.getFirstName(), p.getLastName(), p.getAddress(), p.getPhone()));
 
 					MedicalRecords medicalRecords = medicalRecordsService.findMRByNameAndFirstName(p.getLastName(),
@@ -114,7 +114,7 @@ public class AlertsService {
 				}
 			}
 		}
-		return new InhabitantsCoveredDTO(personsCoveredDTO, nbAdults, nbChildren);
+		return new InhabitantsCoveredDTO(personsCovered, nbAdults, nbChildren);
 
 	}
 
@@ -152,10 +152,10 @@ public class AlertsService {
 				age = AgeCalculator.calculate(medicalRecords.getBirthdate());
 				if (age <= 18) {
 
-					childrenCovered.add(new NameFirstnameAndAgeDTO( p.getFirstName(),p.getLastName(), age));
+					childrenCovered.add(new NameFirstnameAndAgeDTO(p.getFirstName(), p.getLastName(), age));
 					childAtTheAddress++;
 				} else {
-					adults.add(new NameAndFirstNameDTO( p.getLastName(),p.getFirstName()));
+					adults.add(new NameAndFirstNameDTO(p.getLastName(), p.getFirstName()));
 				}
 			}
 		} catch (DataNotFoundException e) {
@@ -163,12 +163,10 @@ public class AlertsService {
 		}
 
 		if (childAtTheAddress > 0) {
-			listChildAlert =new ListOfChildAlertDTO(childrenCovered, adults);
-
-			return listChildAlert;
-		} else {
-			return null;
+			listChildAlert = new ListOfChildAlertDTO(childrenCovered, adults);
 		}
+
+		return listChildAlert;
 	}
 
 	/**
@@ -188,7 +186,7 @@ public class AlertsService {
 
 		List<Person> personsAtAnAddress = new ArrayList<>();
 		List<InhabitantsAtAnaddressDTO> inhabitantsAtAnaddressDTO = new ArrayList<>();
-		InfoAddressDTO listOfInhabitants =null ;
+		InfoAddressDTO listOfInhabitants = new InfoAddressDTO();
 		int fireStation;
 		int age;
 
@@ -209,8 +207,7 @@ public class AlertsService {
 //			listOfInhabitants.add(new InfoAddressDTO(inhabitantsAtAnaddressDTO, "address : " + address,
 //					"fireStation : " + fireStation));
 			listOfInhabitants = new InfoAddressDTO(inhabitantsAtAnaddressDTO, address, fireStation);
-			
-			
+
 		} catch (DataNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -249,7 +246,7 @@ public class AlertsService {
 			addresses = fireStationService.findAddressByFireStation(fs);
 			if (!(addresses == null)) {
 				for (String address : addresses) {
-					List<InhabitantsAtAnaddressDTO> inhabitantsAtAnaddressDTO = new ArrayList<>();
+					List<InhabitantsAtAnaddressDTO> inhabitantsAtAnaddress = new ArrayList<>();
 					personsAtAnAddress = personService.findPersonsByAddress(address);
 
 					for (Person p : personsAtAnAddress) {
@@ -258,11 +255,11 @@ public class AlertsService {
 								p.getFirstName());
 						age = AgeCalculator.calculate(medicalRecords.getBirthdate());
 
-						inhabitantsAtAnaddressDTO.add(new InhabitantsAtAnaddressDTO(p.getLastName(), p.getFirstName(),
+						inhabitantsAtAnaddress.add(new InhabitantsAtAnaddressDTO(p.getLastName(), p.getFirstName(),
 								p.getPhone(), age, medicalRecords.getMedications(), medicalRecords.getAllergies()));
 
 					}
-					listOfInhabitants.add(new InfoStationDTO(fs, address, inhabitantsAtAnaddressDTO));
+					listOfInhabitants.add(new InfoStationDTO(fs, address, inhabitantsAtAnaddress));
 				}
 			}
 		}

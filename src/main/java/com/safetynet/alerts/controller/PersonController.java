@@ -27,6 +27,9 @@ public class PersonController {
 	@Autowired
 	PersonService personService;
 
+	private final ResponseEntity<String> responseForBadRequest = ResponseEntity.badRequest()
+			.body("Name or FirstName Empty : unable to add/delete/update");
+
 	@GetMapping("/persons")
 	public ResponseEntity<List<Person>> getPersons() {
 		logger.debug("Getmapping - getPersons");
@@ -37,24 +40,32 @@ public class PersonController {
 
 	/**
 	 * http://localhost:8080/person
+	 * 
 	 * @param person
 	 * @return a message about the creation of a person
 	 * @throws AlreadyExistsException
+	 * @throws DataNotFoundException
 	 */
 	@PostMapping("/person")
-	public ResponseEntity<String> addPerson(@RequestBody(required = true) Person person) throws AlreadyExistsException {
-		try {
-			String result = personService.addPerson(person);
+	public ResponseEntity<String> addPerson(@RequestBody(required = true) Person person)
+			throws AlreadyExistsException, DataNotFoundException {
 
-			logger.debug("Postmapping - addPerson");
+		if (person.getFirstName().isEmpty() || person.getLastName().isEmpty()) {
+			logger.error("Invalid request  HttpStatus : ", HttpStatus.BAD_REQUEST);
+			return responseForBadRequest;
+		} else {
+			try {
+				String result = personService.addPerson(person);
 
-			return new ResponseEntity<String>(result, HttpStatus.OK);
-		} catch (AlreadyExistsException e) {
-			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+				logger.debug("Postmapping - addPerson");
 
+				return new ResponseEntity<String>(result, HttpStatus.OK);
+			} catch (AlreadyExistsException e) {
+				return new ResponseEntity<String>("A person already exists with this name and firstName", HttpStatus.BAD_REQUEST);
+			}
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param person
@@ -62,19 +73,27 @@ public class PersonController {
 	 * @throws DataNotFoundException
 	 */
 	@DeleteMapping("/person")
-	public ResponseEntity<String> deletePerson(@RequestBody(required = true) Person person) throws DataNotFoundException {
-		try {
-			String result = personService.deletePerson(person);
+	public ResponseEntity<String> deletePerson(@RequestBody(required = true) Person person)
+			throws DataNotFoundException {
 
-			logger.debug("Postmapping - deletePerson");
+		if (person.getFirstName().isEmpty() || person.getLastName().isEmpty()) {
+			logger.error("Invalid request  HttpStatus : ", HttpStatus.BAD_REQUEST);
+			return responseForBadRequest;
+		} else {
 
-			return new ResponseEntity<String>(result, HttpStatus.OK);
-		} catch (DataNotFoundException e) {
-			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			try {
+				String result = personService.deletePerson(person);
 
+				logger.debug("Postmapping - deletePerson");
+
+				return new ResponseEntity<String>(result, HttpStatus.OK);
+			} catch (DataNotFoundException e) {
+				return new ResponseEntity<String>("No person with this name and firstName could be found : unable to delete", HttpStatus.BAD_REQUEST);
+
+			}
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param person
@@ -82,18 +101,22 @@ public class PersonController {
 	 * @throws DataNotFoundException
 	 */
 	@PutMapping("/person")
-	public ResponseEntity<String> upddatePerson(@RequestBody(required = true) Person person) throws DataNotFoundException {
-		try {
-			String result = personService.updatePerson(person);
+	public ResponseEntity<String> upddatePerson(@RequestBody(required = true) Person person)
+			throws DataNotFoundException {
+		if (person.getFirstName().isEmpty() || person.getLastName().isEmpty()) {
+			logger.error("Invalid request  HttpStatus : ", HttpStatus.BAD_REQUEST);
+			return responseForBadRequest;
+		} else {
 
-			logger.debug("Putmapping - updatePerson");
-
-			return new ResponseEntity<String>(result, HttpStatus.OK);
-		} catch (DataNotFoundException e) {
-			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			try {
+				String result = personService.updatePerson(person);
+				logger.debug("Putmapping - updatePerson");
+				return new ResponseEntity<String>(result, HttpStatus.OK);
+			
+			} catch (DataNotFoundException e) {
+				return new ResponseEntity<String>("No person with this name and firstName could be found : unable to update", HttpStatus.BAD_REQUEST);
+			}
 		}
 	}
-
-
 
 }

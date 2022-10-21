@@ -145,7 +145,7 @@ class FireStationServiceTest {
 
 	@Tag("AddFirestation")
 	@Test
-	void testAddFireStation_withANewFS_MustBeOK() throws AlreadyExistsException {
+	void testAddFireStation_withANewFS_MustBeOK() throws AlreadyExistsException, DataNotFoundException {
 
 		// given
 		when(fireStationRepositoryMock.findFireStationsByAddress(fireStationNew.getAddress())).thenReturn(null);
@@ -169,15 +169,11 @@ class FireStationServiceTest {
 
 	@Tag("AddFirestation")
 	@Test
-	void testAddFireStation_withANumber0_MustBeKO_NoFS_Added() throws AlreadyExistsException {
+	void testAddFireStation_withANumber0_MustBeKO_NoFS_Added() throws AlreadyExistsException, DataNotFoundException {
 
 		// given
 		// fireStationKO
-		// when
-		String result = fireStationService.addFireStation(fireStationKO);
-		// then
-		assertThat(result).isEqualTo("No Fire station Added : missing address or firestation number null !");
-
+		assertThrows(DataNotFoundException.class, () -> fireStationService.addFireStation(fireStationKO));
 	}
 
 	@Tag("DeleteFirestation")
