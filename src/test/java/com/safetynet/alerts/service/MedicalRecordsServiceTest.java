@@ -22,6 +22,7 @@ import com.safetynet.alerts.exceptions.AlreadyExistsException;
 import com.safetynet.alerts.exceptions.DataNotFoundException;
 import com.safetynet.alerts.model.MedicalRecords;
 import com.safetynet.alerts.repository.MedicalRecordsRepository;
+import com.safetynet.alerts.util.WriteDataInJson;
 
 @ExtendWith(MockitoExtension.class)
 class MedicalRecordsServiceTest {
@@ -36,6 +37,10 @@ class MedicalRecordsServiceTest {
 
 	@Mock
 	private static MedicalRecordsRepository medicalRecordsRepositoryMock;
+	
+	@Mock
+	private static WriteDataInJson writeDataInJsonMock;
+
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {

@@ -73,7 +73,7 @@ public class FireStation {
 		if (getClass() != obj.getClass())
 			return false;
 		FireStation other = (FireStation) obj;
-		return Objects.equals(address, other.address) && station == other.station;
+		return Objects.equals(address, other.address) ;
 	}
 
 }

@@ -11,12 +11,17 @@ import com.safetynet.alerts.exceptions.AlreadyExistsException;
 import com.safetynet.alerts.exceptions.DataNotFoundException;
 import com.safetynet.alerts.model.MedicalRecords;
 import com.safetynet.alerts.repository.MedicalRecordsRepository;
+import com.safetynet.alerts.util.WriteDataInJson;
 
 @Service
 public class MedicalRecordsService {
 
 	@Autowired
 	MedicalRecordsRepository medicalRecordsRepository;
+	
+	@Autowired
+	WriteDataInJson writeData;
+
 
 	private static final Logger logger = LogManager.getLogger("MedicalRecordsService");
 
@@ -63,6 +68,7 @@ public class MedicalRecordsService {
 					medicalRecords.getFirstName());
 			if (MRToAdd == null) {
 				medicalRecordsRepository.addMedicalRecords(medicalRecords);
+				writeData.writeInFile();
 				message = "MedicalRecords for : " + medicalRecords.getLastName() + " - " + medicalRecords.getFirstName()
 						+ " has been added";
 			} else {
@@ -98,6 +104,7 @@ public class MedicalRecordsService {
 					medicalRecords.getFirstName());
 			if (MRToDelete != null) {
 				medicalRecordsRepository.deleteMedicalRecords(medicalRecords);
+				writeData.writeInFile();
 				message = "MedicalRecords for : " + medicalRecords.getLastName() + " - " + medicalRecords.getFirstName()
 						+ " has been deleted";
 			} else {
@@ -130,6 +137,7 @@ public class MedicalRecordsService {
 					medicalRecords.getFirstName());
 			if (MRToUpdate != null) {
 				medicalRecordsRepository.updateMedicalRecords(medicalRecords);
+				writeData.writeInFile();
 				message = "MedicalRecords for : " + medicalRecords.getLastName() + " - " + medicalRecords.getFirstName()
 						+ " has been updated";
 			} else {

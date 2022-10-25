@@ -19,6 +19,7 @@ import com.safetynet.alerts.exceptions.DataNotFoundException;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.service.PersonService;
 
+
 @RestController
 public class PersonController {
 
@@ -26,7 +27,8 @@ public class PersonController {
 
 	@Autowired
 	PersonService personService;
-
+	
+	
 	private final ResponseEntity<String> responseForBadRequest = ResponseEntity.badRequest()
 			.body("Name or FirstName Empty : unable to add/delete/update");
 
@@ -58,7 +60,7 @@ public class PersonController {
 				String result = personService.addPerson(person);
 
 				logger.debug("Postmapping - addPerson");
-
+				
 				return new ResponseEntity<String>(result, HttpStatus.OK);
 			} catch (AlreadyExistsException e) {
 				return new ResponseEntity<String>("A person already exists with this name and firstName", HttpStatus.BAD_REQUEST);

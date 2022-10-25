@@ -13,6 +13,7 @@ import com.safetynet.alerts.exceptions.AlreadyExistsException;
 import com.safetynet.alerts.exceptions.DataNotFoundException;
 import com.safetynet.alerts.model.FireStation;
 import com.safetynet.alerts.repository.FireStationRepository;
+import com.safetynet.alerts.util.WriteDataInJson;
 
 @Service
 public class FireStationService {
@@ -21,6 +22,10 @@ public class FireStationService {
 
 	@Autowired
 	FireStationRepository fireStationRepository;
+	
+	@Autowired
+	WriteDataInJson writeData;
+
 
 	/**
 	 * Retrieve the list of FireStations for a number of station
@@ -111,6 +116,7 @@ public class FireStationService {
 			FireStation fireStationToAdd = fireStationRepository.findFireStationsByAddress(fireStation.getAddress());
 			if (fireStationToAdd == null) {
 				fireStationRepository.addFireStation(fireStation);
+				writeData.writeInFile();
 				message = "Fire Station : " + fireStation.getAddress() + " - station number : "
 						+ fireStation.getStation() + " has been added";
 			} else {
@@ -144,6 +150,7 @@ public class FireStationService {
 				// le FS existe en base alors on peut le supprimer
 			} else if (fireStationToDelete.getStation() == fireStation.getStation()) {
 				fireStationRepository.deleteFireStation(fireStation);
+				writeData.writeInFile();
 				message = "Fire Station : " + fireStation.getAddress() + " - station number : "
 						+ fireStation.getStation() + " has been deleted";
 				// un FS existe à cette adresse mais pas avec ce numero
@@ -182,6 +189,7 @@ public class FireStationService {
 
 			} else {
 				fireStationRepository.updateFireStation(fireStation);
+				writeData.writeInFile();
 				message = "Fire Station : " + fireStation.getAddress() + " - station number : "
 						+ fireStation.getStation() + " has been updated";
 

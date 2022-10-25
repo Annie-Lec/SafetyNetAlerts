@@ -42,7 +42,7 @@ public class FireStationRepository {
 	 */
 	@PostConstruct
 	public void initFireStations() {
-		System.out.println("initFire initFire initFire");
+		System.out.println("repository : initialize Firestation with the JSON File");
 		setFireStations(fireStationMapper.mapToFireStationClass((Any) dataSource.getReadDataFireStations()));
 	}
 
@@ -54,6 +54,10 @@ public class FireStationRepository {
 	public FireStationRepository(List<FireStation> fireStations) {
 		this.fireStations = fireStations;
 	}
+	
+	public FireStationRepository() {}
+	
+	
 
 	/**
 	 * Save a fireStation in the list of fireStations
@@ -72,7 +76,7 @@ public class FireStationRepository {
 	 */
 	public void deleteFireStation(FireStation fireStation) {
 		logger.info("deleting a fireStation in the data listof fireStation", fireStation);
-		fireStations.remove(fireStation);
+		this.fireStations.remove(fireStation);
 	}
 
 	/**

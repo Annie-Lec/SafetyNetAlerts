@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,6 +35,8 @@ public class PersonRepository {
 	@Autowired
 	PersonMapper personMapper = new PersonMapper();
 
+	
+
 	public PersonRepository() {
 	}
 
@@ -51,7 +54,7 @@ public class PersonRepository {
 		System.out.println("repository : initialize Person with the JSON File");
 		setPersons(personMapper.mapToPersonClass((Any) dataSource.getReadDataPersons()));
 	}
-
+	
 	/**
 	 * Save a person in the list of persons
 	 * 

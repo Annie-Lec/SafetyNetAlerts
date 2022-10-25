@@ -24,6 +24,7 @@ import com.safetynet.alerts.exceptions.AlreadyExistsException;
 import com.safetynet.alerts.exceptions.DataNotFoundException;
 import com.safetynet.alerts.model.FireStation;
 import com.safetynet.alerts.repository.FireStationRepository;
+import com.safetynet.alerts.util.WriteDataInJson;
 
 @ExtendWith(MockitoExtension.class)
 class FireStationServiceTest {
@@ -40,6 +41,10 @@ class FireStationServiceTest {
 
 	@Mock
 	private static FireStationRepository fireStationRepositoryMock;
+	
+	@Mock
+	private static WriteDataInJson writeDataInJsonMock;
+
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {

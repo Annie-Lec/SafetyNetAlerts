@@ -23,6 +23,7 @@ import com.safetynet.alerts.exceptions.AlreadyExistsException;
 import com.safetynet.alerts.exceptions.DataNotFoundException;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.repository.PersonRepository;
+import com.safetynet.alerts.util.WriteDataInJson;
 
 @ExtendWith(MockitoExtension.class)
 class PersonServiceTest {
@@ -33,12 +34,17 @@ class PersonServiceTest {
 	private static Person personExist = new Person();
 	private static Person personNew = new Person();
 	private static Person personKO = new Person();
+	
+		
 
 	@InjectMocks
 	private static PersonService personService;
 
 	@Mock
 	private static PersonRepository personRepositoryMock;
+	
+	@Mock
+	private static WriteDataInJson writeDataInJsonMock;
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
@@ -56,7 +62,10 @@ class PersonServiceTest {
 		personNew = new Person("Nouveauperson", "prenom", "address2", "city1", "7777", "0177777777", "email7");
 		personKO = new Person("PersonKOsansprenom", "", "address2", "city1", "0002", "0100000007", "email0");
 
+		
 	}
+	
+
 
 	@Test
 	void testFindPersonsByAddress_withAnExistingAddress() throws DataNotFoundException {
@@ -207,6 +216,7 @@ class PersonServiceTest {
 		// given
 		when(personRepositoryMock.findPersonByNameAndFirstName(personExist.getLastName(), personExist.getFirstName()))
 				.thenReturn(personExist);
+	
 		// when
 		String result = personService.deletePerson(personExist);
 		// then

@@ -1,10 +1,13 @@
 package com.safetynet.alerts.mapper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Component;
 
 import com.jsoniter.any.Any;
@@ -62,6 +65,19 @@ public class MedicalRecordsMapper {
 		}
 		
 		return medicalRecords;
+	}
+	
+	public JSONObject medicalRecordsToJSON(MedicalRecords mr) {
+		Map<String, Object> mapMedicalRecords = new HashMap<>();
+
+		mapMedicalRecords.put("firstName", mr.getFirstName());
+		mapMedicalRecords.put("lastName", mr.getLastName());
+		mapMedicalRecords.put("birthdate", mr.getBirthdate());
+		mapMedicalRecords.put("medications", mr.getMedications());
+		mapMedicalRecords.put("allergies", mr.getAllergies());
+		JSONObject jsonMR = new JSONObject(mapMedicalRecords);
+		return jsonMR;
+
 	}
 
 }

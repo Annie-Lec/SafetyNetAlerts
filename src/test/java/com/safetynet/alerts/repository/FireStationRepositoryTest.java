@@ -51,7 +51,7 @@ public class FireStationRepositoryTest {
 	@Test
 	public void updateFireStationTest()  {
 		// Given
-		FireStation updatedFireStation = new FireStation("address1", 4);
+		FireStation updatedFireStation = new FireStation("address2", 4);
 		// when
 		FireStation result = fireStationRepository.updateFireStation(updatedFireStation);
 		// Then
@@ -61,7 +61,7 @@ public class FireStationRepositoryTest {
 	@Test
 	public void findFireStationsByAddressTest_withAGoodAddress() {
 		// Given
-		String address = "address1";
+		String address = "address2";
 		// when
 		FireStation result = fireStationRepository.findFireStationsByAddress(address);
 		// Then

@@ -11,6 +11,7 @@ import com.safetynet.alerts.exceptions.AlreadyExistsException;
 import com.safetynet.alerts.exceptions.DataNotFoundException;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.repository.PersonRepository;
+import com.safetynet.alerts.util.WriteDataInJson;
 
 @Service
 public class PersonService {
@@ -19,6 +20,9 @@ public class PersonService {
 
 	@Autowired
 	PersonRepository personRepository;
+	
+	@Autowired
+	WriteDataInJson writeData;
 
 	/**
 	 * find a list of Person by the address
@@ -125,6 +129,7 @@ public class PersonService {
 					person.getFirstName());
 			if (personToAdd == null) {
 				personRepository.addPerson(person);
+				writeData.writeInFile();
 				message = "Person : " + person.getLastName() + " - " + person.getFirstName() + " has been added";
 			} else {
 				message = "A person already exists with this name and firstName";
@@ -152,6 +157,7 @@ public class PersonService {
 					person.getFirstName());
 			if (personToDelete != null) {
 				personRepository.deletePerson(person);
+				writeData.writeInFile();
 				message = "Person : " + person.getLastName() + " - " + person.getFirstName() + " has been deleted";
 			} else {
 				message = "No person with this name and firstName could be found : unable to delete";
@@ -178,7 +184,8 @@ public class PersonService {
 			Person personToUpdate = personRepository.findPersonByNameAndFirstName(person.getLastName(),
 					person.getFirstName());
 			if (personToUpdate != null) {
-				personRepository.updatePerson(person);
+				personRepository.updatePerson(person);		
+				writeData.writeInFile();
 				message = "Person : " + person.getLastName() + " - " + person.getFirstName() + " has been updated";
 			} else {
 				message = "No person with this name and firstName could be found : unable to update";
