@@ -19,10 +19,8 @@ import com.safetynet.alerts.exceptions.DataNotFoundException;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.service.PersonService;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 
-@Api("API pour les opérations CRUD sur les Persons.")
+//@Api("API pour les opérations CRUD sur les Persons.")
 @RestController
 public class PersonController {
 
@@ -35,7 +33,7 @@ public class PersonController {
 	private final ResponseEntity<String> responseForBadRequest = ResponseEntity.badRequest()
 			.body("Name or FirstName Empty : unable to add/delete/update");
 
-	 @ApiOperation(value = "Récupère toute la liste des personnes")
+//	 @ApiOperation(value = "Récupère toute la liste des personnes")
 	@GetMapping("/persons")
 	public ResponseEntity<List<Person>> getPersons() {
 		logger.debug("Getmapping - getPersons");
@@ -52,7 +50,7 @@ public class PersonController {
 	 * @throws AlreadyExistsException
 	 * @throws DataNotFoundException
 	 */
-	 @ApiOperation(value = "Crée une personne")
+	// @ApiOperation(value = "Crée une personne")
 	@PostMapping("/person")
 	public ResponseEntity<String> addPerson(@RequestBody(required = true) Person person)
 			throws AlreadyExistsException, DataNotFoundException {

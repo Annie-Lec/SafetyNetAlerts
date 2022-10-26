@@ -31,34 +31,49 @@ Une fois l'application lancée, vous pouvez exécuter via Postman des ajouts / s
 
 Vous pouvez bien entendu générer les listes destinées aux services d'urgences :
       
-* http://localhost:8080/firestation?firestation=2:  
+* [http://localhost:8080/firestation?firestation=2](http://localhost:8080/firestation?firestation=2):  
 pour générer la liste des personnes couvertes par le service d'urgence numéro 2.
 Modifier le numéro de la station pour afficher la liste des personnes couverte par un autre service d'urgence.
 
-* http://localhost:8080/childAlert?address=`adresse`:  
+* [http://localhost:8080/childAlert?address=`adresse`](http://localhost:8080/childAlert?address=`adresse`):  
 Cette URL retourne la liste des enfants habitant à "adresse". 
 Renseigner l'adresse pour faire apparaitre une liste d'enfants.
 
-* http://localhost:8080/phoneAlert?firestation=1:  
+* [http://localhost:8080/phoneAlert?firestation=1](http://localhost:8080/phoneAlert?firestation=1):  
 Cette URL retourne la liste des numéros de téléphone des habitants desservis par le centre de secours numéro 1.
 Modifier le numéro de station pour générer la liste d'une autre centre de secours.
 
-* http://localhost:8080/fire?address=`adresse`:  
+* [http://localhost:8080/fire?address=`adresse`](http://localhost:8080/fire?address=`adresse`):  
 Cette URL retourne la liste des habitants résident à "adresse".
 renseigner l'adresse pour obtenir une nouvelle liste.
 
-* http://localhost:8080/flood/stations?stations=2:  
+* [http://localhost:8080/flood/stations?stations=2](http://localhost:8080/flood/stations?stations=2):  
 Cette URL retourne la liste des foyers desservis par le centre de secours numéro 2.
 Modifier le numéro de station pour obtenir une nouvelle liste de foyers
 
-* http://localhost:8080/personInfo?firstName=Brian&lastName=Stelzer:  
+* [http://localhost:8080/personInfo?firstName=Brian&lastName=Stelzer](http://localhost:8080/personInfo?firstName=Brian&lastName=Stelzer):  
 Cette URL retourne les informations médicales de Brian Stelzer ainsi que ceux des membres de sa famille.
 Modifier Nom et prénom pour obtenir une autre liste
 
-* http://localhost:8080/communityEmail?city=Culver:  
+* [http://localhost:8080/communityEmail?city=Culver](http://localhost:8080/communityEmail?city=Culver):  
 Cette URL retourne les emails de tous les habitants de la ville 'Culver'
 
 
 ### Documentation
-Pour consulter la documentation de l'application, cliquer sur le lien ci-dessous :
+Pour consulter la documentation de l'application, cliquer sur le lien ci-contre :
 [Lien vers la documentation](http://localhost:8080/swagger-ui.html#/)
+
+
+## Etat de santé de l'application
+
+*[Bilan de santé](http://localhost:8080/actuator/health)
+-> Service en fonction ou pas : UP or DOWN...
+
+*[Metrics de l'application](http://localhost:8080/actuator/metrics)
+-> Mémoire utilisée, données JVM, serveur Tomcat,...
+
+*[Info](http://localhost:8080/actuator/info)
+-> Quelques informations techniques sur l'application
+
+*[http Trace](http://localhost:8080/actuator/httptrace)
+-> Pour visualiser les traces http
