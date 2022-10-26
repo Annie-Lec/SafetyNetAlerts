@@ -19,6 +19,9 @@ import com.safetynet.alerts.exceptions.DataNotFoundException;
 import com.safetynet.alerts.model.MedicalRecords;
 import com.safetynet.alerts.service.MedicalRecordsService;
 
+import io.swagger.annotations.Api;
+
+@Api("API pour les opérations CRUD sur les MedicalRecords.")
 @RestController
 public class MedicalRecordsController {
 

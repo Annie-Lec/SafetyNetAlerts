@@ -20,6 +20,9 @@ import com.safetynet.alerts.exceptions.DataNotFoundException;
 import com.safetynet.alerts.model.FireStation;
 import com.safetynet.alerts.service.FireStationService;
 
+import io.swagger.annotations.Api;
+
+@Api("API pour les opérations CRUD sur les Firestations.")
 @RestController
 public class FireStationController {
 
