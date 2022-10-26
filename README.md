@@ -35,17 +35,17 @@ Vous pouvez bien entendu générer les listes destinées aux services d'urgences
 pour générer la liste des personnes couvertes par le service d'urgence numéro 2.
 Modifier le numéro de la station pour afficher la liste des personnes couverte par un autre service d'urgence.
 
-* http://localhost:8080/childAlert?address=`1509 Culver St`:  
-Cette URL retourne la liste des enfants habitant à une adresse. 
-Modifier l'adresse pour faire apparaitre une autre liste d'enfants.
+* http://localhost:8080/childAlert?address=`adresse`:  
+Cette URL retourne la liste des enfants habitant à "adresse". 
+Renseigner l'adresse pour faire apparaitre une liste d'enfants.
 
 * http://localhost:8080/phoneAlert?firestation=1:  
 Cette URL retourne la liste des numéros de téléphone des habitants desservis par le centre de secours numéro 1.
 Modifier le numéro de station pour générer la liste d'une autre centre de secours.
 
-* http://localhost:8080/fire?address=`1509 Culver St`:  
-Cette URL retourne la liste des habitants résident au 1509 Culver St.
-Changer d'adresse pour obtenir une nouvelle liste.
+* http://localhost:8080/fire?address=`adresse`:  
+Cette URL retourne la liste des habitants résident à "adresse".
+renseigner l'adresse pour obtenir une nouvelle liste.
 
 * http://localhost:8080/flood/stations?stations=2:  
 Cette URL retourne la liste des foyers desservis par le centre de secours numéro 2.
