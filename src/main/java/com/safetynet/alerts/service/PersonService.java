@@ -32,6 +32,7 @@ public class PersonService {
 	 */
 	public List<Person> findPersonsByAddress(String address) throws DataNotFoundException {
 		List<Person> persons = null;
+		logger.debug("begin PersonService.findPersonsByAddress");
 
 		persons = personRepository.findPersonsByAddress(address);
 
@@ -53,6 +54,7 @@ public class PersonService {
 	public List<Person> findPersonsByLastName(String lastName) throws DataNotFoundException {
 
 		List<Person> persons = null;
+		logger.debug("begin PersonService.findPersonsByLastName");
 
 		persons = personRepository.findPersonsByName(lastName);
 		if (persons != null) {
@@ -73,6 +75,7 @@ public class PersonService {
 	public Person findPersonByLastNameAndFirstName(String lastName, String firstName) throws DataNotFoundException {
 
 		Person person = null;
+		logger.debug("begin PersonService.findPersonByLastNameAndFirstName");
 
 		person = personRepository.findPersonByNameAndFirstName(lastName, firstName);
 
@@ -95,6 +98,8 @@ public class PersonService {
 	public List<Person> findPersonsByCity(String city) throws DataNotFoundException {
 
 		List<Person> persons = null;
+		logger.debug("begin PersonService.findPersonsByCity");
+
 		persons = personRepository.findPersonsByCity(city);
 		if (persons != null) {
 		return persons;
@@ -124,6 +129,8 @@ public class PersonService {
 	 */
 	public String addPerson(Person person) throws AlreadyExistsException, DataNotFoundException {
 		String message;
+		logger.debug("begin PersonService.addPerson");
+
 		if (!(person.getFirstName().isEmpty() || person.getLastName().isEmpty())) {
 			Person personToAdd = personRepository.findPersonByNameAndFirstName(person.getLastName(),
 					person.getFirstName());
@@ -145,13 +152,15 @@ public class PersonService {
 	}
 
 	/**
-	 * 
+	 * Delete a person
 	 * @param person
 	 * @return a message about the deleting of a person
 	 * @throws DataNotFoundException
 	 */
 	public String deletePerson(Person person) throws DataNotFoundException {
 		String message;
+		logger.debug("begin PersonService.deletePerson");
+
 		if (!(person.getFirstName().isEmpty() || person.getLastName().isEmpty())) {
 			Person personToDelete = personRepository.findPersonByNameAndFirstName(person.getLastName(),
 					person.getFirstName());
@@ -173,13 +182,15 @@ public class PersonService {
 	}
 	
 	/**
-	 * 
+	 * Update a person object
 	 * @param person
 	 * @return a message relative to a person's update
 	 * @throws DataNotFoundException
 	 */
 	public String updatePerson(Person person) throws DataNotFoundException {
 		String message;
+		logger.debug("begin PersonService.updatePerson");
+
 		if (!(person.getFirstName().isEmpty() || person.getLastName().isEmpty())) {
 			Person personToUpdate = personRepository.findPersonByNameAndFirstName(person.getLastName(),
 					person.getFirstName());

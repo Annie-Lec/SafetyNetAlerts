@@ -19,9 +19,12 @@ import com.safetynet.alerts.exceptions.DataNotFoundException;
 import com.safetynet.alerts.model.MedicalRecords;
 import com.safetynet.alerts.service.MedicalRecordsService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 
 //@Api("API pour les opérations CRUD sur les MedicalRecords.")
 @RestController
+@Tag(name = "API for Medical Records", description = "API pour les opérations CRUD concernant les données médicales")
 public class MedicalRecordsController {
 
 	private static final Logger logger = LogManager.getLogger("MedicalRecordsController");

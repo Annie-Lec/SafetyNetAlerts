@@ -9,9 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safetynet.alerts.exceptions.AlreadyExistsException;
@@ -19,9 +21,12 @@ import com.safetynet.alerts.exceptions.DataNotFoundException;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.service.PersonService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 
 //@Api("API pour les opérations CRUD sur les Persons.")
 @RestController
+@Tag(name = "API for Person", description = "API pour les opérations CRUD sur les Persons")
 public class PersonController {
 
 	private static final Logger logger = LogManager.getLogger("PersonController");
@@ -37,7 +42,7 @@ public class PersonController {
 	@GetMapping("/persons")
 	public ResponseEntity<List<Person>> getPersons() {
 		logger.debug("Getmapping - getPersons");
-		System.out.println("GetMapping PErsons");
+		
 		return new ResponseEntity<>(personService.getPersonsService(), HttpStatus.OK);
 
 	}
@@ -53,7 +58,9 @@ public class PersonController {
 	// @ApiOperation(value = "Crée une personne")
 	@PostMapping("/person")
 	public ResponseEntity<String> addPerson(@RequestBody(required = true) Person person)
+	//public ResponseEntity<String> addPerson(@PathVariable Person person)
 			throws AlreadyExistsException, DataNotFoundException {
+		logger.debug("begin PersonController.addPerson");
 
 		if (person.getFirstName().isEmpty() || person.getLastName().isEmpty()) {
 			logger.error("Invalid request  HttpStatus : ", HttpStatus.BAD_REQUEST);
@@ -80,6 +87,7 @@ public class PersonController {
 	@DeleteMapping("/person")
 	public ResponseEntity<String> deletePerson(@RequestBody(required = true) Person person)
 			throws DataNotFoundException {
+		logger.debug("begin PersonController.deletePerson");
 
 		if (person.getFirstName().isEmpty() || person.getLastName().isEmpty()) {
 			logger.error("Invalid request  HttpStatus : ", HttpStatus.BAD_REQUEST);
@@ -108,6 +116,8 @@ public class PersonController {
 	@PutMapping("/person")
 	public ResponseEntity<String> upddatePerson(@RequestBody(required = true) Person person)
 			throws DataNotFoundException {
+		logger.debug("begin PersonController.upddatePerson");
+
 		if (person.getFirstName().isEmpty() || person.getLastName().isEmpty()) {
 			logger.error("Invalid request  HttpStatus : ", HttpStatus.BAD_REQUEST);
 			return responseForBadRequest;

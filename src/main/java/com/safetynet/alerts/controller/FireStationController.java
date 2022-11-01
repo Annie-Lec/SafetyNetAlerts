@@ -20,10 +20,13 @@ import com.safetynet.alerts.exceptions.DataNotFoundException;
 import com.safetynet.alerts.model.FireStation;
 import com.safetynet.alerts.service.FireStationService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 
 
 //@Api("API pour les opérations CRUD sur les Firestations.")
 @RestController
+@Tag(name = "API for Fire Station", description = "API pour les opérations CRUD concernant les données sur les services d'urgence")
 public class FireStationController {
 
 	private static final Logger logger = LogManager.getLogger("FireStationController");
@@ -88,7 +91,7 @@ public class FireStationController {
 	@DeleteMapping("/firestation")
 	public ResponseEntity<String> deleteFireStation(@RequestBody(required = true) FireStation fireStation)
 			throws DataNotFoundException {
-		logger.debug("DeleteMapping - deleteFireStation");
+		logger.debug("FireStationController DeleteMapping - deleteFireStation");
 		if (fireStation.getAddress().isEmpty() || fireStation.getStation() <= 0) {
 			logger.error("Invalid request  HttpStatus : ", HttpStatus.BAD_REQUEST);
 			return responseForBadRequest;
@@ -113,7 +116,7 @@ public class FireStationController {
 	@PutMapping("/firestation")
 	public ResponseEntity<String> updDateFireStation(@RequestBody(required = true) FireStation fireStation)
 			throws DataNotFoundException {
-		logger.debug("PutMapping - updDateFireStation");
+		logger.debug("FireStationController PutMapping - updDateFireStation");
 		if (fireStation.getAddress().isEmpty() || fireStation.getStation() <= 0) {
 			logger.error("Invalid request  HttpStatus : ", HttpStatus.BAD_REQUEST);
 			return responseForBadRequest;

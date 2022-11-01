@@ -3,11 +3,12 @@ package com.safetynet.alerts.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.safetynet.alerts.dto.InfoAddressDTO;
 import com.safetynet.alerts.dto.InfoForFirstAndLastNameDTO;
@@ -17,7 +18,11 @@ import com.safetynet.alerts.dto.ListOfChildAlertDTO;
 import com.safetynet.alerts.exceptions.DataNotFoundException;
 import com.safetynet.alerts.service.AlertsService;
 
-@Controller
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@RestController
+@Tag(name = "API for Alerts", description = "URL d'Alerte")
+
 public class AlertsController {
 
 	@Autowired
@@ -30,6 +35,7 @@ public class AlertsController {
 	 * @return
 	 * @throws DataNotFoundException 
 	 */
+	@Description ( "Define the list of phone numbers to send emergency SMS - http://localhost:8080/phoneAlert?firestation=<firestation_number>")
 	@GetMapping("/phoneAlert")
 	public ResponseEntity<List<String>> SMS(@RequestParam(value = "firestation", required = true) int firestation) throws DataNotFoundException {
 		return new ResponseEntity<>(alertsService.getPhoneforPersonsCoveredByStation(firestation), HttpStatus.OK);

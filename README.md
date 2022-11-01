@@ -24,7 +24,7 @@ Après avoir fait un clone du répertoire GitHub, vous pouvez importer le code d
 
 ### Gestion des données 
 
-Une fois l'application lancée, vous pouvez exécuter via Postman des ajouts / suppressions / modifications de données ou bien tout simplement consulter les données sur les personnes, centre de secours et informations médicales.
+Une fois l'application lancée, vous pouvez exécuter via Postman des ajouts / suppressions / modifications de données ou bien tout simplement consulter les données sur les personnes, centre de secours et informations médicales. Voir la documentaion pour plus de détails.
 
 
 ### Alerts URLS
@@ -60,7 +60,7 @@ Cette URL retourne les emails de tous les habitants de la ville 'Culver'
 
 
 ### Documentation
-Pour consulter la documentation de l'application, cliquer sur le lien ci-contre :
+Pour consulter la documentation de l'application : l'utilisation des opérations CRUD sur les personnes, services d'urgence ou informations médicales ou bien concernant les URL d'alerte, cliquer sur le lien ci-contre :
 [Lien vers la documentation](http://localhost:8080/swagger-ui.html#/)
 
 
