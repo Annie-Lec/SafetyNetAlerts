@@ -17,6 +17,23 @@ L'application fonctionne avec:
 Le fichier json est manipulé avec la librairie Json-Simple
 Le projet a été développé avec SpringBoot : outil utilisé Spring Tool Suite 4
 
+## Les principales commandes
+Dans le répertoire de travail `target`, Maven stocke les fichiers techniques produits par l’application : notamment le fichier jar et les rapports de tests.
+
+1-	Pour les tests
+- `mvn test` : après compilation du code, lance le code des tests unitaires présent dans le répertoire /src/test/java
+- `mvn verify` : compile le code, exécute les tests unitaires et les tests d’intégration
+- `mvn site` : génère les rapports du projet
+- `mvn clean` : nettoie le répertoire de travail target
+
+2- 	Pour packager l’application
+
+- `mvn package` : compile le code, exécute les tests unitaires et créé le fichier jar
+
+3- 	Pour lancer l’application
+
+- `java -jar target/alerts-0.0.1-SNAPSHOT.jar` : une fois packagé, se mettre en ligne de commande dans le répertoire contenant le pom.xml et lancer la ligne de commande.
+
 ## Lancer l'application
 
 Après avoir fait un clone du répertoire GitHub, vous pouvez importer le code dans n'importe quel IDE et lancer SafetynetalertsApplication.
