@@ -2,6 +2,12 @@ package com.safetynet.alerts.controller;
 
 import java.util.List;
 
+//import java.util.logging.Logger;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
@@ -24,6 +30,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "API for Alerts", description = "URL d'Alerte")
 
 public class AlertsController {
+	
+	//private static final Logger logger = LoggerFactory.getLogger("AlertsController");
+	private static final Logger logger = LogManager.getLogger("AlertsController");
+
 
 	@Autowired
 	AlertsService alertsService;
@@ -38,6 +48,7 @@ public class AlertsController {
 	@Description ( "Define the list of phone numbers to send emergency SMS - http://localhost:8080/phoneAlert?firestation=<firestation_number>")
 	@GetMapping("/phoneAlert")
 	public ResponseEntity<List<String>> SMS(@RequestParam(value = "firestation", required = true) int firestation) throws DataNotFoundException {
+		logger.debug("GetMapping phone List for a firestation");
 		return new ResponseEntity<>(alertsService.getPhoneforPersonsCoveredByStation(firestation), HttpStatus.OK);
 
 	}
